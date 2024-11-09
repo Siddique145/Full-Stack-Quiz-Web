@@ -226,7 +226,7 @@ export default function TeacherDashboard() {
 
   // Generate the shareable link for a quiz
   const generateShareableLink = (quizId) => {
-    return `${window.location.origin}/take-quiz/${quizId}`;
+    return `${window.location.origin}`;
   };
 
   // Show loading state while fetching quizzes
@@ -280,8 +280,8 @@ export default function TeacherDashboard() {
                 </p>
                 <div className="mt-4 flex justify-center">
                   {/* Ant Design QRCode component */}
-                  <QRCode value={generateShareableLink} size={128} />
                   {/* <QRCode value={generateShareableLink(selectedQuiz.id)} size={128} /> */}
+                  <QRCode value={generateShareableLink} size={128} />
                 </div>
               </div>
               <div className="items-center px-4 py-3">
