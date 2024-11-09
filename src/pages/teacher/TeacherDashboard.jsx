@@ -279,7 +279,8 @@ export default function TeacherDashboard() {
                 </p>
                 <div className="mt-4 flex justify-center">
                   {/* Ant Design QRCode component */}
-                  <QRCode value={generateShareableLink(selectedQuiz.id)} size={128} />
+                  <QRCode value={generateShareableLink} size={128} />
+                  {/* <QRCode value={generateShareableLink(selectedQuiz.id)} size={128} /> */}
                 </div>
               </div>
               <div className="items-center px-4 py-3">
