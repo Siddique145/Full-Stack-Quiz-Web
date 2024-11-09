@@ -127,38 +127,34 @@
 // }
 // export default QuizCreation
 
-
-
-
-
-
-
-
-
-
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Use useNavigate instead of useHistory
-import { auth, db } from '../../firebase/firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
+import { auth, db } from "../../firebase/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 function QuizCreation() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [questions, setQuestions] = useState([{ question: '', options: ['', '', '', ''], correctAnswer: 0 }]);
-  const navigate = useNavigate();  // Use the navigate hook
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [questions, setQuestions] = useState([
+    { question: "", options: ["", "", "", ""], correctAnswer: 0 },
+  ]);
+  const navigate = useNavigate(); // Use the navigate hook
 
   const handleAddQuestion = () => {
-    setQuestions([...questions, { question: '', options: ['', '', '', ''], correctAnswer: 0 }]);
+    setQuestions([
+      ...questions,
+      { question: "", options: ["", "", "", ""], correctAnswer: 0 },
+    ]);
   };
 
   const handleQuestionChange = (index, field, value) => {
     const newQuestions = [...questions];
-    if (field === 'question') {
+    if (field === "question") {
       newQuestions[index].question = value;
-    } else if (field.startsWith('option')) {
-      const optionIndex = parseInt(field.split('-')[1]);
+    } else if (field.startsWith("option")) {
+      const optionIndex = parseInt(field.split("-")[1]);
       newQuestions[index].options[optionIndex] = value;
-    } else if (field === 'correctAnswer') {
+    } else if (field === "correctAnswer") {
       newQuestions[index].correctAnswer = parseInt(value);
     }
     setQuestions(newQuestions);
@@ -167,16 +163,16 @@ function QuizCreation() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addDoc(collection(db, 'quizzes'), {
+      await addDoc(collection(db, "quizzes"), {
         title,
         description,
         questions,
         teacherId: auth.currentUser.uid,
-        createdAt: new Date()
+        createdAt: new Date(),
       });
-      navigate('/teacher');  // Replace history.push with navigate
+      navigate("/teacher"); // Replace history.push with navigate
     } catch (error) {
-      console.error('Error adding quiz: ', error);
+      console.error("Error adding quiz: ", error);
     }
   };
 
@@ -185,7 +181,12 @@ function QuizCreation() {
       <h1 className="text-3xl font-bold mb-6">Create a New Quiz</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Title
+          </label>
           <input
             type="text"
             id="title"
@@ -196,7 +197,12 @@ function QuizCreation() {
           />
         </div>
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Description
+          </label>
           <textarea
             id="description"
             value={description}
@@ -211,7 +217,9 @@ function QuizCreation() {
             <input
               type="text"
               value={question.question}
-              onChange={(e) => handleQuestionChange(index, 'question', e.target.value)}
+              onChange={(e) =>
+                handleQuestionChange(index, "question", e.target.value)
+              }
               placeholder="Enter question"
               required
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -221,7 +229,13 @@ function QuizCreation() {
                 <input
                   type="text"
                   value={option}
-                  onChange={(e) => handleQuestionChange(index, `option-${optionIndex}`, e.target.value)}
+                  onChange={(e) =>
+                    handleQuestionChange(
+                      index,
+                      `option-${optionIndex}`,
+                      e.target.value
+                    )
+                  }
                   placeholder={`Option ${optionIndex + 1}`}
                   required
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -229,16 +243,25 @@ function QuizCreation() {
               </div>
             ))}
             <div className="mt-2">
-              <label htmlFor={`correctAnswer-${index}`} className="block text-sm font-medium text-gray-700">Correct Answer</label>
+              <label
+                htmlFor={`correctAnswer-${index}`}
+                className="block text-sm font-medium text-gray-700"
+              >
+                Correct Answer
+              </label>
               <select
                 id={`correctAnswer-${index}`}
                 value={question.correctAnswer}
-                onChange={(e) => handleQuestionChange(index, 'correctAnswer', e.target.value)}
+                onChange={(e) =>
+                  handleQuestionChange(index, "correctAnswer", e.target.value)
+                }
                 required
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
               >
                 {question.options.map((_, optionIndex) => (
-                  <option key={optionIndex} value={optionIndex}>Option {optionIndex + 1}</option>
+                  <option key={optionIndex} value={optionIndex}>
+                    Option {optionIndex + 1}
+                  </option>
                 ))}
               </select>
             </div>
@@ -264,4 +287,4 @@ function QuizCreation() {
   );
 }
 
-export default QuizCreation;
+export default QuizCreation
