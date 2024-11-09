@@ -275,7 +275,8 @@ export default function TeacherDashboard() {
               <h3 className="text-lg leading-6 font-medium text-gray-900">Shareable Link and QR Code</h3>
               <div className="mt-2 px-7 py-3">
                 <p className="text-sm text-gray-500">
-                  {generateShareableLink(selectedQuiz.id)}
+                  {/* {generateShareableLink(selectedQuiz.id)} */}
+                  {generateShareableLink}
                 </p>
                 <div className="mt-4 flex justify-center">
                   {/* Ant Design QRCode component */}
