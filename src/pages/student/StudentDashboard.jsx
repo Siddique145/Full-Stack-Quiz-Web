@@ -1208,16 +1208,321 @@
 
 
 
+// import React, { useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import { auth, db } from '../../firebase/firebase';
+// import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+// import { Layout, Menu, Button, Card, Avatar, Input, Modal, List, Typography, message, Row, Col, Spin, Statistic, Progress, Tag } from 'antd';
+// import { UserOutlined, LogoutOutlined, ClockCircleOutlined, EyeOutlined, BookOutlined, TrophyOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+
+// const { Header, Content, Sider } = Layout;
+// const { Meta } = Card;
+// const { Title, Text, Paragraph } = Typography;
+
+// export default function StudentDashboard() {
+//   const [quizzes, setQuizzes] = useState([]);
+//   const [quizResults, setQuizResults] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [accessCode, setAccessCode] = useState('');
+//   const [error, setError] = useState('');
+//   const [studentName, setStudentName] = useState('');
+//   const [selectedResult, setSelectedResult] = useState(null);
+//   const [isResultModalVisible, setIsResultModalVisible] = useState(false);
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     fetchQuizzes();
+//     fetchQuizResults();
+//     fetchStudentName();
+//   }, []);
+
+//   const fetchQuizzes = async () => {
+//     setLoading(true);
+//     try {
+//       const userDoc = await getDocs(query(collection(db, 'users'), where('email', '==', auth.currentUser.email)));
+//       const userData = userDoc.docs[0].data();
+//       const teacherEmail = userData.teacherEmail;
+
+//       const teacherDoc = await getDocs(query(collection(db, 'users'), where('email', '==', teacherEmail)));
+//       const teacherId = teacherDoc.docs[0].id;
+
+//       const q = query(collection(db, 'quizzes'), where('teacherId', '==', teacherId), where('locked', '==', false));
+//       const querySnapshot = await getDocs(q);
+//       const quizzesData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+//       setQuizzes(quizzesData);
+//     } catch (error) {
+//       console.error("Error fetching quizzes:", error);
+//       setError("Failed to load quizzes. Please try again later.");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const fetchQuizResults = async () => {
+//     try {
+//       const q = query(collection(db, 'quizResults'), where('studentId', '==', auth.currentUser.uid));
+//       const querySnapshot = await getDocs(q);
+//       const resultsData = await Promise.all(querySnapshot.docs.map(async (doc) => {
+//         const resultData = doc.data();
+//         const quizDoc = await getDoc(doc(db, 'quizzes', resultData.quizId));
+//         const quizData = quizDoc.data();
+//         return {
+//           id: doc.id,
+//           quizId: resultData.quizId,
+//           quizTitle: quizData?.title || 'Unknown Quiz',
+//           score: resultData.score,
+//           totalQuestions: resultData.totalQuestions,
+//           answers: resultData.answers,
+//           attemptDate: resultData.attemptDate.toDate().toLocaleString(),
+//         };
+//       }));
+//       setQuizResults(resultsData);
+//     } catch (error) {
+//       console.error("Error fetching quiz results:", error);
+//       setError("Failed to load quiz results. Please try again later.");
+//     }
+//   };
+
+//   const fetchStudentName = async () => {
+//     const studentDoc = await getDocs(query(collection(db, 'users'), where('email', '==', auth.currentUser.email)));
+//     if (!studentDoc.empty) {
+//       setStudentName(studentDoc.docs[0].data().name);
+//     }
+//   };
+
+//   const handleAccessCodeSubmit = (quizId) => {
+//     const quiz = quizzes.find(q => q.id === quizId);
+//     if (quiz.accessCode === accessCode) {
+//       setError('');
+//       navigate(`/take-quiz/${quizId}`);
+//     } else {
+//       message.error('Invalid access code');
+//     }
+//   };
+
+//   const isQuizAttempted = (quizId) => {
+//     return quizResults.some(result => result.quizId === quizId);
+//   };
+
+//   const getQuizResult = (quizId) => {
+//     return quizResults.find(result => result.quizId === quizId);
+//   };
+
+//   const handleLogout = () => {
+//     auth.signOut();
+//     navigate('/login');
+//   };
+
+//   return (
+//     <Layout className="min-h-screen">
+//       <Header className="px-4 bg-gradient-to-r text-white bg-indigo-600 hover:bg-indigo-700">
+//         <Row justify="space-between" align="middle">
+//           <Col>
+//             <div className="flex items-center">
+//               <Avatar icon={<UserOutlined />} className="mr-2 bg-white text-indigo-600" />
+//               <Title level={4} className="m-0 text-white">Welcome, {studentName}</Title>
+//             </div>
+//           </Col>
+//           <Col>
+//             <Button type="primary" icon={<LogoutOutlined />} onClick={handleLogout} className="bg-white text-indigo-600 border-white hover:bg-indigo-100 hover:border-indigo-100">
+//               Logout
+//             </Button>
+//           </Col>
+//         </Row>
+//       </Header>
+//       <Layout>
+//         <Sider width={200} className="bg-gray-100" breakpoint="lg" collapsedWidth="0">
+//           <Menu
+//             mode="inline"
+//             defaultSelectedKeys={['1']}
+//             className="h-full border-r-0"
+//           >
+//             <Menu.Item key="1" icon={<BookOutlined />}>Available Quizzes</Menu.Item>
+//             <Menu.Item key="2" icon={<TrophyOutlined />}>Quiz Results</Menu.Item>
+//           </Menu>
+//         </Sider>
+//         <Layout className="p-6">
+//           <Content
+//             className="bg-white rounded-lg shadow-md"
+//           >
+//             <Spin spinning={loading}>
+//               <div className="p-6">
+//                 <Row gutter={[16, 16]} className="mb-6">
+//                   <Col xs={24} sm={12} md={8} lg={6}>
+//                     <Statistic title="Available Quizzes" value={quizzes.length} className="bg-blue-50 p-4 rounded-lg" />
+//                   </Col>
+//                   <Col xs={24} sm={12} md={8} lg={6}>
+//                     <Statistic title="Completed Quizzes" value={quizResults.length} className="bg-green-50 p-4 rounded-lg" />
+//                   </Col>
+//                 </Row>
+
+//                 <Title level={2} className="mb-4">Available Quizzes</Title>
+//                 <List
+//                   grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+//                   dataSource={quizzes}
+//                   renderItem={quiz => (
+//                     <List.Item>
+//                       <Card
+//                         hoverable
+//                         className="shadow-sm transition-all duration-300 hover:shadow-lg"
+//                         title={<span className="text-lg font-semibold">{quiz.title}</span>}
+//                         extra={quiz.timeLimit && <Text className="text-blue-500"><ClockCircleOutlined /> {quiz.timeLimit} min</Text>}
+//                       >
+//                         <Meta 
+//                           description={
+//                             <Paragraph ellipsis={{ rows: 2 }} className="text-gray-600">{quiz.description}</Paragraph>
+//                           } 
+//                         />
+//                         {isQuizAttempted(quiz.id) ? (
+//                           <div className="mt-4">
+//                             <Tag color="green" icon={<CheckCircleOutlined />}>Completed</Tag>
+//                             <Button 
+//                               type="primary" 
+//                               onClick={() => { setSelectedResult(getQuizResult(quiz.id)); setIsResultModalVisible(true); }}
+//                               className="w-full mt-2 text-white bg-indigo-600 hover:bg-indigo-700"
+//                             >
+//                               View Results
+//                             </Button>
+//                           </div>
+//                         ) : quiz.accessCode ? (
+//                           <div className="mt-4">
+//                             <Input
+//                               placeholder="Enter access code"
+//                               value={accessCode}
+//                               onChange={(e) => setAccessCode(e.target.value)}
+//                               className="mb-2"
+//                             />
+//                             <Button type="primary" onClick={() => handleAccessCodeSubmit(quiz.id)} className="w-full text-white bg-indigo-600 hover:bg-indigo-700">
+//                               Submit Access Code
+//                             </Button>
+//                           </div>
+//                         ) : (
+//                           <Button type="primary" onClick={() => navigate(`/take-quiz/${quiz.id}`)} className="w-full mt-4 text-white bg-indigo-600 hover:bg-indigo-700">
+//                             Take Quiz
+//                           </Button>
+//                         )}
+//                       </Card>
+//                     </List.Item>
+//                   )}
+//                 />
+
+//                 <Title level={2} className="mt-8 mb-4">Your Quiz Results</Title>
+//                 <List
+//                   grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
+//                   dataSource={quizResults}
+//                   renderItem={result => (
+//                     <List.Item>
+//                       <Card
+//                         hoverable
+//                         className="shadow-sm transition-all duration-300 hover:shadow-lg"
+//                         actions={[
+//                           <Button type="link" onClick={() => { setSelectedResult(result); setIsResultModalVisible(true); }}>
+//                             <EyeOutlined /> See Detailed Results
+//                           </Button>
+//                         ]}
+//                       >
+//                         <Meta
+//                           title={<span className="text-lg font-semibold">{result.quizTitle}</span>}
+//                           description={
+//                             <>
+//                               <Text className="block text-gray-600 mb-2">Attempted on: {result.attemptDate}</Text>
+//                               <Progress 
+//                                 percent={Math.round((result.score / result.totalQuestions) * 100)} 
+//                                 format={() => `${result.score}/${result.totalQuestions}`}
+//                                 strokeColor={{
+//                                   '0%': '#108ee9',
+//                                   '100%': '#87d068',
+//                                 }}
+//                               />
+//                             </>
+//                           }
+//                         />
+//                       </Card>
+//                     </List.Item>
+//                   )}
+//                 />
+
+//                 {error && <Text type="danger" className="mt-4 block">{error}</Text>}
+
+//                 <Modal
+//                   title={`Detailed Quiz Results: ${selectedResult?.quizTitle}`}
+//                   visible={isResultModalVisible}
+//                   onCancel={() => setIsResultModalVisible(false)}
+//                   footer={null}
+//                   width={800}
+//                   className="rounded-lg overflow-hidden"
+//                 >
+//                   {selectedResult && (
+//                     <div>
+//                       <Row gutter={[16, 16]} className="mb-6">
+//                         <Col span={12}>
+//                           <Statistic title="Score" value={selectedResult.score} suffix={`/ ${selectedResult.totalQuestions}`} className="bg-blue-50 p-4 rounded-lg" />
+//                         </Col>
+//                         <Col span={12}>
+//                           <Statistic title="Percentage" value={Math.round((selectedResult.score / selectedResult.totalQuestions) * 100)} suffix="%" className="bg-green-50 p-4 rounded-lg" />
+//                         </Col>
+//                       </Row>
+//                       <Text type="secondary" className="block mb-4">Attempted on: {selectedResult.attemptDate}</Text>
+//                       <List
+//                         itemLayout="vertical"
+//                         dataSource={selectedResult.answers}
+//                         renderItem={(answer, index) => (
+//                           <List.Item>
+//                             <Card
+//                               className={`mb-4 ${answer.isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}
+//                             >
+//                               <Title level={5} className="mb-2">
+//                                 {answer.isCorrect ? (
+//                                   <CheckCircleOutlined className="text-green-500 mr-2" />
+//                                 ) : (
+//                                   <CloseCircleOutlined className="text-red-500 mr-2" />
+//                                 )}
+//                                 {`Question ${index + 1}: ${answer.question}`}
+//                               </Title>
+//                               <Text className="block mb-1">Your answer: {answer.userAnswer}</Text>
+//                               {!answer.isCorrect && <Text type="success" className="block">Correct answer: {answer.correctAnswer}</Text>}
+//                             </Card>
+//                           </List.Item>
+//                         )}
+//                       />
+//                     </div>
+//                   )}
+//                 </Modal>
+//               </div>
+//             </Spin>
+//           </Content>
+//         </Layout>
+//       </Layout>
+//     </Layout>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../../firebase/firebase';
 import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
-import { Layout, Menu, Button, Card, Avatar, Input, Modal, List, Typography, message, Row, Col, Spin, Statistic, Progress, Tag } from 'antd';
+import { Layout, Menu, Button, Card, Avatar, Input, Modal, List, Typography, message, Row, Col, Spin, Statistic, Progress, Tag, Tabs } from 'antd';
 import { UserOutlined, LogoutOutlined, ClockCircleOutlined, EyeOutlined, BookOutlined, TrophyOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
-const { Header, Content, Sider } = Layout;
+const { Header, Content } = Layout;
 const { Meta } = Card;
 const { Title, Text, Paragraph } = Typography;
+const { TabPane } = Tabs;
 
 export default function StudentDashboard() {
   const [quizzes, setQuizzes] = useState([]);
@@ -1226,14 +1531,18 @@ export default function StudentDashboard() {
   const [accessCode, setAccessCode] = useState('');
   const [error, setError] = useState('');
   const [studentName, setStudentName] = useState('');
+  const [studentPassword, setStudentPassword] = useState('');
+  const [studentEmail, setStudentEmail] = useState('');
+  const [studentAvatar, setStudentAvatar] = useState('');
   const [selectedResult, setSelectedResult] = useState(null);
   const [isResultModalVisible, setIsResultModalVisible] = useState(false);
+  const [isProfileModalVisible, setIsProfileModalVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchQuizzes();
     fetchQuizResults();
-    fetchStudentName();
+    fetchStudentInfo();
   }, []);
 
   const fetchQuizzes = async () => {
@@ -1283,10 +1592,14 @@ export default function StudentDashboard() {
     }
   };
 
-  const fetchStudentName = async () => {
+  const fetchStudentInfo = async () => {
     const studentDoc = await getDocs(query(collection(db, 'users'), where('email', '==', auth.currentUser.email)));
     if (!studentDoc.empty) {
-      setStudentName(studentDoc.docs[0].data().name);
+      const studentData = studentDoc.docs[0].data();
+      setStudentName(studentData.name);
+      setStudentEmail(studentData.email);
+      setStudentPassword(studentData.password);
+      setStudentAvatar(studentData.name.charAt(0)); // First letter of student's name
     }
   };
 
@@ -1313,40 +1626,35 @@ export default function StudentDashboard() {
     navigate('/login');
   };
 
+  const handleProfileClick = () => {
+    setIsProfileModalVisible(true);
+  };
+
   return (
     <Layout className="min-h-screen">
       <Header className="px-4 bg-gradient-to-r text-white bg-indigo-600 hover:bg-indigo-700">
         <Row justify="space-between" align="middle">
           <Col>
             <div className="flex items-center">
-              <Avatar icon={<UserOutlined />} className="mr-2 bg-white text-indigo-600" />
-              <Title level={4} className="m-0 text-white">Welcome, {studentName}</Title>
+              <Avatar className="mr-2 bg-white text-indigo-600" onClick={handleProfileClick}>
+                {studentAvatar}
+              </Avatar>
+              <Title level={4} onClick={handleProfileClick} className="m-0 text-white">{studentName}</Title>
             </div>
           </Col>
           <Col>
             <Button type="primary" icon={<LogoutOutlined />} onClick={handleLogout} className="bg-white text-indigo-600 border-white hover:bg-indigo-100 hover:border-indigo-100">
-              Logout
             </Button>
           </Col>
         </Row>
       </Header>
+      
       <Layout>
-        <Sider width={200} className="bg-gray-100" breakpoint="lg" collapsedWidth="0">
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            className="h-full border-r-0"
-          >
-            <Menu.Item key="1" icon={<BookOutlined />}>Available Quizzes</Menu.Item>
-            <Menu.Item key="2" icon={<TrophyOutlined />}>Quiz Results</Menu.Item>
-          </Menu>
-        </Sider>
-        <Layout className="p-6">
-          <Content
-            className="bg-white rounded-lg shadow-md"
-          >
-            <Spin spinning={loading}>
-              <div className="p-6">
+        <Content className="p-6 bg-white rounded-lg shadow-md">
+          <Spin spinning={loading}>
+            <Tabs defaultActiveKey="1" centered>
+              {/* Quizzes Tab */}
+              <TabPane tab="Available Quizzes" key="1">
                 <Row gutter={[16, 16]} className="mb-6">
                   <Col xs={24} sm={12} md={8} lg={6}>
                     <Statistic title="Available Quizzes" value={quizzes.length} className="bg-blue-50 p-4 rounded-lg" />
@@ -1356,7 +1664,6 @@ export default function StudentDashboard() {
                   </Col>
                 </Row>
 
-                <Title level={2} className="mb-4">Available Quizzes</Title>
                 <List
                   grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
                   dataSource={quizzes}
@@ -1369,9 +1676,7 @@ export default function StudentDashboard() {
                         extra={quiz.timeLimit && <Text className="text-blue-500"><ClockCircleOutlined /> {quiz.timeLimit} min</Text>}
                       >
                         <Meta 
-                          description={
-                            <Paragraph ellipsis={{ rows: 2 }} className="text-gray-600">{quiz.description}</Paragraph>
-                          } 
+                          description={<Paragraph ellipsis={{ rows: 2 }} className="text-gray-600">{quiz.description}</Paragraph>} 
                         />
                         {isQuizAttempted(quiz.id) ? (
                           <div className="mt-4">
@@ -1405,8 +1710,10 @@ export default function StudentDashboard() {
                     </List.Item>
                   )}
                 />
+              </TabPane>
 
-                <Title level={2} className="mt-8 mb-4">Your Quiz Results</Title>
+              {/* Results Tab */}
+              <TabPane tab="Your Results" key="2">
                 <List
                   grid={{ gutter: 16, xs: 1, sm: 2, md: 2, lg: 3, xl: 3, xxl: 4 }}
                   dataSource={quizResults}
@@ -1441,57 +1748,74 @@ export default function StudentDashboard() {
                     </List.Item>
                   )}
                 />
+              </TabPane>
+            </Tabs>
 
-                {error && <Text type="danger" className="mt-4 block">{error}</Text>}
+            {error && <Text type="danger" className="mt-4 block">{error}</Text>}
 
-                <Modal
-                  title={`Detailed Quiz Results: ${selectedResult?.quizTitle}`}
-                  visible={isResultModalVisible}
-                  onCancel={() => setIsResultModalVisible(false)}
-                  footer={null}
-                  width={800}
-                  className="rounded-lg overflow-hidden"
-                >
-                  {selectedResult && (
-                    <div>
-                      <Row gutter={[16, 16]} className="mb-6">
-                        <Col span={12}>
-                          <Statistic title="Score" value={selectedResult.score} suffix={`/ ${selectedResult.totalQuestions}`} className="bg-blue-50 p-4 rounded-lg" />
-                        </Col>
-                        <Col span={12}>
-                          <Statistic title="Percentage" value={Math.round((selectedResult.score / selectedResult.totalQuestions) * 100)} suffix="%" className="bg-green-50 p-4 rounded-lg" />
-                        </Col>
-                      </Row>
-                      <Text type="secondary" className="block mb-4">Attempted on: {selectedResult.attemptDate}</Text>
-                      <List
-                        itemLayout="vertical"
-                        dataSource={selectedResult.answers}
-                        renderItem={(answer, index) => (
-                          <List.Item>
-                            <Card
-                              className={`mb-4 ${answer.isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}
-                            >
-                              <Title level={5} className="mb-2">
-                                {answer.isCorrect ? (
-                                  <CheckCircleOutlined className="text-green-500 mr-2" />
-                                ) : (
-                                  <CloseCircleOutlined className="text-red-500 mr-2" />
-                                )}
-                                {`Question ${index + 1}: ${answer.question}`}
-                              </Title>
-                              <Text className="block mb-1">Your answer: {answer.userAnswer}</Text>
-                              {!answer.isCorrect && <Text type="success" className="block">Correct answer: {answer.correctAnswer}</Text>}
-                            </Card>
-                          </List.Item>
-                        )}
-                      />
-                    </div>
-                  )}
-                </Modal>
+            {/* Result Modal */}
+            <Modal
+              title={`Detailed Quiz Results: ${selectedResult?.quizTitle}`}
+              visible={isResultModalVisible}
+              onCancel={() => setIsResultModalVisible(false)}
+              footer={null}
+              width={800}
+              className="rounded-lg overflow-hidden"
+            >
+              {selectedResult && (
+                <div>
+                  <Row gutter={[16, 16]} className="mb-6">
+                    <Col span={12}>
+                      <Statistic title="Score" value={selectedResult.score} suffix={`/ ${selectedResult.totalQuestions}`} className="bg-blue-50 p-4 rounded-lg" />
+                    </Col>
+                    <Col span={12}>
+                      <Statistic title="Percentage" value={Math.round((selectedResult.score / selectedResult.totalQuestions) * 100)} suffix="%" className="bg-green-50 p-4 rounded-lg" />
+                    </Col>
+                  </Row>
+                  <Text type="secondary" className="block mb-4">Attempted on: {selectedResult.attemptDate}</Text>
+                  <List
+                    itemLayout="vertical"
+                    dataSource={selectedResult.answers}
+                    renderItem={(answer, index) => (
+                      <List.Item>
+                        <Card
+                          className={`mb-4 ${answer.isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}
+                        >
+                          <Title level={5} className="mb-2">
+                            {answer.isCorrect ? (
+                              <CheckCircleOutlined className="text-green-500 mr-2" />
+                            ) : (
+                              <CloseCircleOutlined className="text-red-500 mr-2" />
+                            )}
+                            {`Question ${index + 1}: ${answer.question}`}
+                          </Title>
+                          <Text className="block mb-1">Your answer: {answer.userAnswer}</Text>
+                          {!answer.isCorrect && <Text type="success" className="block">Correct answer: {answer.correctAnswer}</Text>}
+                        </Card>
+                      </List.Item>
+                    )}
+                  />
+                </div>
+              )}
+            </Modal>
+
+            {/* Profile Modal */}
+            <Modal
+              title="Student Profile"
+              visible={isProfileModalVisible}
+              onCancel={() => setIsProfileModalVisible(false)}
+              footer={null}
+            >
+              <div>
+                <Title level={4}>Name: {studentName}</Title>
+                <Text>Email: {studentEmail}</Text>
+                <br />
+                <Text>Password: {studentPassword}</Text>
+
               </div>
-            </Spin>
-          </Content>
-        </Layout>
+            </Modal>
+          </Spin>
+        </Content>
       </Layout>
     </Layout>
   );

@@ -671,6 +671,7 @@ export default function Signup() {
       await setDoc(doc(db, 'users', user.uid), {
         name,
         email,
+        password,
         role: 'student',
         school,
         class: className,
