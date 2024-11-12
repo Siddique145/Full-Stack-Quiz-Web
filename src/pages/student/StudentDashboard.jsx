@@ -2692,6 +2692,7 @@ export default function StudentDashboard() {
                   dataSource={quizResults}
                   columns={columns}
                   rowKey="id"
+                  scroll={{ x: "100%" }}
                 />
               </TabPane>
             </Tabs>
