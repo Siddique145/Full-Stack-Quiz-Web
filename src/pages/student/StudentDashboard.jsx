@@ -2552,10 +2552,11 @@ export default function StudentDashboard() {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <Button onClick={() => handleViewResult(record)}>View Details</Button>
+        <Button>Under Construction</Button>
       ),
     },
   ];
+
 
   return (
     <Layout className="min-h-screen">
