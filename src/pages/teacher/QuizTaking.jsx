@@ -497,13 +497,68 @@ export default function QuizTaking() {
     }
   };
 
+  // const submitQuiz = async () => {
+  //   const score = userAnswers.reduce((total, answer, index) => {
+  //     return total + (answer === quiz.questions[index].correctAnswer ? 1 : 0);
+  //   }, 0);
+  //   const percentage = (score / quiz.questions.length) * 100;
+  //   const studentName = auth.currentUser.displayName || 'Anonymous';
+
+  //   const resultData = {
+  //     studentName: studentName,
+  //     studentId: auth.currentUser.uid,
+  //     score: score,
+  //     totalQuestions: quiz.questions.length,
+  //     percentage: percentage,
+  //     answers: userAnswers.map((answerIndex, index) => ({
+  //       questionId: quiz.questions[index].id,
+  //       selectedAnswer: quiz.questions[index].options[answerIndex],
+  //       correctAnswer: quiz.questions[index].options[quiz.questions[index].correctAnswer],
+  //       isCorrect: answerIndex === quiz.questions[index].correctAnswer,
+  //     })),
+  //     submittedAt: new Date(),
+  //   };
+
+  //   try {
+  //     // Add result to the allResults collection for easier data access and analysis
+  //     const allResultDocRef = await addDoc(collection(db, 'allResults'), {
+  //       quizId: quizId,
+  //       ...resultData,
+  //     });
+
+  //     // Update quiz document with the student's result
+  //     await updateDoc(doc(db, 'quizzes', quizId), {
+  //       results: arrayUnion(resultData),
+  //     });
+
+  //     // Add result reference to the user's attemptedQuizzes field
+  //     await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+  //       [`attemptedQuizzes.${quizId}`]: {
+  //         attempted: true,
+  //         resultId: allResultDocRef.id,  // Add the result document ID here
+  //       },
+  //     });
+
+  //     navigate('/student', {
+  //       state: {
+  //         quizCompleted: true,
+  //         score,
+  //         totalQuestions: quiz.questions.length,
+  //         percentage,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     setError('Error submitting quiz');
+  //     console.error(err);
+  //   }
+  // };
   const submitQuiz = async () => {
     const score = userAnswers.reduce((total, answer, index) => {
       return total + (answer === quiz.questions[index].correctAnswer ? 1 : 0);
     }, 0);
     const percentage = (score / quiz.questions.length) * 100;
     const studentName = auth.currentUser.displayName || 'Anonymous';
-
+  
     const resultData = {
       studentName: studentName,
       studentId: auth.currentUser.uid,
@@ -511,34 +566,34 @@ export default function QuizTaking() {
       totalQuestions: quiz.questions.length,
       percentage: percentage,
       answers: userAnswers.map((answerIndex, index) => ({
-        questionId: quiz.questions[index].id,
-        selectedAnswer: quiz.questions[index].options[answerIndex],
-        correctAnswer: quiz.questions[index].options[quiz.questions[index].correctAnswer],
+        questionId: quiz.questions[index].id || `question_${index + 1}`,
+        selectedAnswer: quiz.questions[index].options[answerIndex] || '',
+        correctAnswer: quiz.questions[index].options[quiz.questions[index].correctAnswer] || '',
         isCorrect: answerIndex === quiz.questions[index].correctAnswer,
       })),
       submittedAt: new Date(),
     };
-
+  
     try {
       // Add result to the allResults collection for easier data access and analysis
       const allResultDocRef = await addDoc(collection(db, 'allResults'), {
         quizId: quizId,
         ...resultData,
       });
-
+  
       // Update quiz document with the student's result
       await updateDoc(doc(db, 'quizzes', quizId), {
         results: arrayUnion(resultData),
       });
-
+  
       // Add result reference to the user's attemptedQuizzes field
       await updateDoc(doc(db, 'users', auth.currentUser.uid), {
         [`attemptedQuizzes.${quizId}`]: {
           attempted: true,
-          resultId: allResultDocRef.id,  // Add the result document ID here
+          resultId: allResultDocRef.id,
         },
       });
-
+  
       navigate('/student', {
         state: {
           quizCompleted: true,
@@ -552,7 +607,6 @@ export default function QuizTaking() {
       console.error(err);
     }
   };
-
   const handleGoBack = () => {
     navigate('/student');
   };
