@@ -812,219 +812,6 @@
 
 
 
-// import React, { useState } from 'react';
-// import { useNavigate, Link } from 'react-router-dom';
-// import { createUserWithEmailAndPassword, sendEmailVerification, getAuth, fetchSignInMethodsForEmail } from 'firebase/auth';
-// import { auth, db } from '../firebase/firebase';
-// import { doc, setDoc, query, where, getDocs, collection } from 'firebase/firestore';
-
-// export default function Signup() {
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [name, setName] = useState('');
-//   const [school, setSchool] = useState('');
-//   const [className, setClassName] = useState('');
-//   const [teacherEmail, setTeacherEmail] = useState('');
-//   const [error, setError] = useState('');
-//   const [loading, setLoading] = useState(false); // Loading state to disable the submit button while processing
-//   const navigate = useNavigate();
-
-//   const handleSignup = async (e) => {
-//     e.preventDefault();
-//     setLoading(true); // Set loading to true
-//     setError(''); // Clear any previous errors
-
-//     try {
-//       // Create an instance of Firebase Auth
-//       const authInstance = getAuth();
-
-//       // Check if the user already exists in Firebase Authentication
-//       const signInMethods = await fetchSignInMethodsForEmail(authInstance, email);
-//       if (signInMethods.length > 0) {
-//         setError('This email is already in use. Please log in or use another email.');
-//         setLoading(false); // Reset loading state
-//         return;
-//       }
-
-//       // Check if teacher exists by querying the 'users' collection for the teacher's email
-//       const teacherQuerySnapshot = await getDocs(
-//         query(collection(db, 'users'), where('email', '==', teacherEmail), where('role', '==', 'teacher'))
-//       );
-
-//       if (teacherQuerySnapshot.empty) {
-//         setError('Invalid teacher email. The teacher does not exist in the database.');
-//         setLoading(false); // Reset loading state
-//         return;
-//       }
-
-//       // Proceed to create the user
-//       const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
-//       const user = userCredential.user;
-
-//       // Send email verification to the user
-//       await sendEmailVerification(user);
-
-//       // Create the user document in Firestore
-//       await setDoc(doc(db, 'users', user.uid), {
-//         name,
-//         uid: user.uid,
-//         email,
-//         role: 'student',
-//         school,
-//         class: className,
-//         teacherEmail,
-//         verified: false, // Initially not verified
-//       });
-
-//       // Redirect to the student page after successful signup
-//       navigate('/student');
-
-//       // You can display a message asking the user to verify their email before logging in
-//       setError('Please check your email to verify your account.');
-
-//     } catch (error) {
-//       // Handle various error scenarios with specific messages
-//       if (error.code === 'auth/invalid-email') {
-//         setError('The email address is invalid. Please check and try again.');
-//       } else if (error.code === 'auth/weak-password') {
-//         setError('Password is too weak. Please provide a stronger password.');
-//       } else {
-//         setError('Failed to create an account. Please try again later.');
-//       }
-//       console.error(error);
-//     } finally {
-//       setLoading(false); // Reset loading state
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-//       <div className="max-w-md w-full space-y-8">
-//         <div>
-//           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create your student account</h2>
-//         </div>
-//         <form className="mt-8 space-y-6" onSubmit={handleSignup}>
-//           <input type="hidden" name="remember" value="true" />
-//           <div className="rounded-md shadow-sm -space-y-px">
-//             <div>
-//               <label htmlFor="name" className="sr-only">Name</label>
-//               <input
-//                 id="name"
-//                 name="name"
-//                 type="text"
-//                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-//                 placeholder="Full Name"
-//                 value={name}
-//                 onChange={(e) => setName(e.target.value)}
-//               />
-//             </div>
-//             <div>
-//               <label htmlFor="email-address" className="sr-only">Email address</label>
-//               <input
-//                 id="email-address"
-//                 name="email"
-//                 type="email"
-//                 autoComplete="email"
-//                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-//                 placeholder="Email address"
-//                 value={email}
-//                 onChange={(e) => setEmail(e.target.value)}
-//               />
-//             </div>
-//             <div>
-//               <label htmlFor="password" className="sr-only">Password</label>
-//               <input
-//                 id="password"
-//                 name="password"
-//                 type="password"
-//                 autoComplete="new-password"
-//                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-//                 placeholder="Password"
-//                 value={password}
-//                 onChange={(e) => setPassword(e.target.value)}
-//               />
-//             </div>
-//             <div>
-//               <label htmlFor="school" className="sr-only">School</label>
-//               <input
-//                 id="school"
-//                 name="school"
-//                 type="text"
-//                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-//                 placeholder="School Name"
-//                 value={school}
-//                 onChange={(e) => setSchool(e.target.value)}
-//               />
-//             </div>
-//             <div>
-//               <label htmlFor="class" className="sr-only">Class</label>
-//               <input
-//                 id="class"
-//                 name="class"
-//                 type="text"
-//                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-//                 placeholder="Class"
-//                 value={className}
-//                 onChange={(e) => setClassName(e.target.value)}
-//               />
-//             </div>
-//             <div>
-//               <label htmlFor="teacher-email" className="sr-only">Teacher's Email</label>
-//               <input
-//                 id="teacher-email"
-//                 name="teacher-email"
-//                 type="email"
-//                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-//                 placeholder="Teacher's Email"
-//                 value={teacherEmail}
-//                 onChange={(e) => setTeacherEmail(e.target.value)}
-//               />
-//             </div>
-//           </div>
-
-//           {error && <p className="mt-2 text-center text-sm text-red-600">{error}</p>}
-
-//           <div>
-//             <button
-//               type="submit"
-//               disabled={loading}
-//               className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
-//             >
-//               {loading ? (
-//                 <div className="flex items-center space-x-2">
-//                   <div className="animate-spin inline-block w-6 h-6 border-4 border-t-4 border-white rounded-full"></div>
-//                   <span>Creating...</span>
-//                 </div>
-//               ) : (
-//                 'Sign up'
-//               )}
-//             </button>
-//           </div>
-//         </form>
-//         <div className="text-sm text-center">
-//           <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-//             Already have an account? Log in
-//           </Link>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { createUserWithEmailAndPassword, sendEmailVerification, getAuth, fetchSignInMethodsForEmail } from 'firebase/auth';
@@ -1040,8 +827,6 @@ export default function Signup() {
   const [teacherEmail, setTeacherEmail] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false); // Loading state to disable the submit button while processing
-  const [showModal, setShowModal] = useState(false); // State to control the modal visibility
-  const [isVerified, setIsVerified] = useState(false); // State to check if the user has verified their email
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
@@ -1079,11 +864,24 @@ export default function Signup() {
       // Send email verification to the user
       await sendEmailVerification(user);
 
-      // Show the modal to inform the user to verify their email
-      setShowModal(true);
+      // Create the user document in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        name,
+        uid: user.uid,
+        email,
+        role: 'student',
+        school,
+        class: className,
+        teacherEmail,
+        verified: false, // Initially not verified
+      });
 
-      // Wait until the user verifies the email before proceeding
-      // User will be informed that they must verify their email before they can proceed
+      // Redirect to the student page after successful signup
+      navigate('/student');
+
+      // You can display a message asking the user to verify their email before logging in
+      setError('Please check your email to verify your account.');
+
     } catch (error) {
       // Handle various error scenarios with specific messages
       if (error.code === 'auth/invalid-email') {
@@ -1096,33 +894,6 @@ export default function Signup() {
       console.error(error);
     } finally {
       setLoading(false); // Reset loading state
-    }
-  };
-
-  const handleVerify = async () => {
-    // Check if the email is verified
-    const user = auth.currentUser;
-
-    if (user.emailVerified) {
-      // If the email is verified, proceed to create the user in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
-        name,
-        uid: user.uid,
-        email,
-        role: 'student',
-        school,
-        class: className,
-        teacherEmail,
-        verified: true, // Mark as verified
-      });
-
-      // Close the modal
-      setShowModal(false);
-
-      // Redirect to the student page after successful signup
-      navigate('/student');
-    } else {
-      setError('Please verify your email first.');
     }
   };
 
@@ -1242,32 +1013,261 @@ export default function Signup() {
           </Link>
         </div>
       </div>
-
-      {/* Modal to inform user to verify email */}
-      {showModal && (
-        <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold">Please Verify Your Email</h3>
-            <p className="text-sm mt-2">
-              We have sent a verification email to your inbox. Please check your email and verify your account.
-            </p>
-            <div className="mt-4 flex justify-end space-x-4">
-              <button
-                className="text-indigo-600"
-                onClick={handleVerify}
-              >
-                I have verified my email
-              </button>
-              <button
-                className="text-gray-500"
-                onClick={() => setShowModal(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+// import React, { useState } from 'react';
+// import { useNavigate, Link } from 'react-router-dom';
+// import { createUserWithEmailAndPassword, sendEmailVerification, getAuth, fetchSignInMethodsForEmail } from 'firebase/auth';
+// import { auth, db } from '../firebase/firebase';
+// import { doc, setDoc, query, where, getDocs, collection } from 'firebase/firestore';
+
+// export default function Signup() {
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [name, setName] = useState('');
+//   const [school, setSchool] = useState('');
+//   const [className, setClassName] = useState('');
+//   const [teacherEmail, setTeacherEmail] = useState('');
+//   const [error, setError] = useState('');
+//   const [loading, setLoading] = useState(false); // Loading state to disable the submit button while processing
+//   const [showModal, setShowModal] = useState(false); // State to control the modal visibility
+//   const [isVerified, setIsVerified] = useState(false); // State to check if the user has verified their email
+//   const navigate = useNavigate();
+
+//   const handleSignup = async (e) => {
+//     e.preventDefault();
+//     setLoading(true); // Set loading to true
+//     setError(''); // Clear any previous errors
+
+//     try {
+//       // Create an instance of Firebase Auth
+//       const authInstance = getAuth();
+
+//       // Check if the user already exists in Firebase Authentication
+//       const signInMethods = await fetchSignInMethodsForEmail(authInstance, email);
+//       if (signInMethods.length > 0) {
+//         setError('This email is already in use. Please log in or use another email.');
+//         setLoading(false); // Reset loading state
+//         return;
+//       }
+
+//       // Check if teacher exists by querying the 'users' collection for the teacher's email
+//       const teacherQuerySnapshot = await getDocs(
+//         query(collection(db, 'users'), where('email', '==', teacherEmail), where('role', '==', 'teacher'))
+//       );
+
+//       if (teacherQuerySnapshot.empty) {
+//         setError('Invalid teacher email. The teacher does not exist in the database.');
+//         setLoading(false); // Reset loading state
+//         return;
+//       }
+
+//       // Proceed to create the user
+//       const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
+//       const user = userCredential.user;
+
+//       // Send email verification to the user
+//       await sendEmailVerification(user);
+
+//       // Show the modal to inform the user to verify their email
+//       setShowModal(true);
+
+//       // Wait until the user verifies the email before proceeding
+//       // User will be informed that they must verify their email before they can proceed
+//     } catch (error) {
+//       // Handle various error scenarios with specific messages
+//       if (error.code === 'auth/invalid-email') {
+//         setError('The email address is invalid. Please check and try again.');
+//       } else if (error.code === 'auth/weak-password') {
+//         setError('Password is too weak. Please provide a stronger password.');
+//       } else {
+//         setError('Failed to create an account. Please try again later.');
+//       }
+//       console.error(error);
+//     } finally {
+//       setLoading(false); // Reset loading state
+//     }
+//   };
+
+//   const handleVerify = async () => {
+//     // Check if the email is verified
+//     const user = auth.currentUser;
+
+//     if (user.emailVerified) {
+//       // If the email is verified, proceed to create the user in Firestore
+//       await setDoc(doc(db, 'users', user.uid), {
+//         name,
+//         uid: user.uid,
+//         email,
+//         role: 'student',
+//         school,
+//         class: className,
+//         teacherEmail,
+//         verified: true, // Mark as verified
+//       });
+
+//       // Close the modal
+//       setShowModal(false);
+
+//       // Redirect to the student page after successful signup
+//       navigate('/student');
+//     } else {
+//       setError('Please verify your email first.');
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+//       <div className="max-w-md w-full space-y-8">
+//         <div>
+//           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create your student account</h2>
+//         </div>
+//         <form className="mt-8 space-y-6" onSubmit={handleSignup}>
+//           <input type="hidden" name="remember" value="true" />
+//           <div className="rounded-md shadow-sm -space-y-px">
+//             <div>
+//               <label htmlFor="name" className="sr-only">Name</label>
+//               <input
+//                 id="name"
+//                 name="name"
+//                 type="text"
+//                 required
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 placeholder="Full Name"
+//                 value={name}
+//                 onChange={(e) => setName(e.target.value)}
+//               />
+//             </div>
+//             <div>
+//               <label htmlFor="email-address" className="sr-only">Email address</label>
+//               <input
+//                 id="email-address"
+//                 name="email"
+//                 type="email"
+//                 autoComplete="email"
+//                 required
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 placeholder="Email address"
+//                 value={email}
+//                 onChange={(e) => setEmail(e.target.value)}
+//               />
+//             </div>
+//             <div>
+//               <label htmlFor="password" className="sr-only">Password</label>
+//               <input
+//                 id="password"
+//                 name="password"
+//                 type="password"
+//                 autoComplete="new-password"
+//                 required
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 placeholder="Password"
+//                 value={password}
+//                 onChange={(e) => setPassword(e.target.value)}
+//               />
+//             </div>
+//             <div>
+//               <label htmlFor="school" className="sr-only">School</label>
+//               <input
+//                 id="school"
+//                 name="school"
+//                 type="text"
+//                 required
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 placeholder="School Name"
+//                 value={school}
+//                 onChange={(e) => setSchool(e.target.value)}
+//               />
+//             </div>
+//             <div>
+//               <label htmlFor="class" className="sr-only">Class</label>
+//               <input
+//                 id="class"
+//                 name="class"
+//                 type="text"
+//                 required
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 placeholder="Class"
+//                 value={className}
+//                 onChange={(e) => setClassName(e.target.value)}
+//               />
+//             </div>
+//             <div>
+//               <label htmlFor="teacher-email" className="sr-only">Teacher's Email</label>
+//               <input
+//                 id="teacher-email"
+//                 name="teacher-email"
+//                 type="email"
+//                 required
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 placeholder="Teacher's Email"
+//                 value={teacherEmail}
+//                 onChange={(e) => setTeacherEmail(e.target.value)}
+//               />
+//             </div>
+//           </div>
+
+//           {error && <p className="mt-2 text-center text-sm text-red-600">{error}</p>}
+
+//           <div>
+//             <button
+//               type="submit"
+//               disabled={loading}
+//               className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+//             >
+//               {loading ? (
+//                 <div className="flex items-center space-x-2">
+//                   <div className="animate-spin inline-block w-6 h-6 border-4 border-t-4 border-white rounded-full"></div>
+//                   <span>Creating...</span>
+//                 </div>
+//               ) : (
+//                 'Sign up'
+//               )}
+//             </button>
+//           </div>
+//         </form>
+//         <div className="text-sm text-center">
+//           <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+//             Already have an account? Log in
+//           </Link>
+//         </div>
+//       </div>
+
+//       {/* Modal to inform user to verify email */}
+//       {showModal && (
+//         <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50">
+//           <div className="bg-white p-6 rounded-lg shadow-md">
+//             <h3 className="text-lg font-semibold">Please Verify Your Email</h3>
+//             <p className="text-sm mt-2">
+//               We have sent a verification email to your inbox. Please check your email and verify your account.
+//             </p>
+//             <div className="mt-4 flex justify-end space-x-4">
+//               <button
+//                 className="text-indigo-600"
+//                 onClick={handleVerify}
+//               >
+//                 I have verified my email
+//               </button>
+//               <button
+//                 className="text-gray-500"
+//                 onClick={() => setShowModal(false)}
+//               >
+//                 Close
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
