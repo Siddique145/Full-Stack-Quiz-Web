@@ -803,9 +803,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, getAuth, fetchSignInMethodsForEmail } from 'firebase/auth';
 import { auth, db } from '../firebase/firebase';
 import { doc, setDoc, query, where, getDocs, collection } from 'firebase/firestore';
 
@@ -826,9 +835,12 @@ export default function Signup() {
     setError(''); // Clear any previous errors
 
     try {
+      // Create an instance of Firebase Auth
+      const authInstance = getAuth();
+
       // Check if the user already exists in Firebase Authentication
-      const userExist = await auth.fetchSignInMethodsForEmail(email);
-      if (userExist.length > 0) {
+      const signInMethods = await fetchSignInMethodsForEmail(authInstance, email);
+      if (signInMethods.length > 0) {
         setError('This email is already in use. Please log in or use another email.');
         setLoading(false); // Reset loading state
         return;
@@ -846,7 +858,7 @@ export default function Signup() {
       }
 
       // Proceed to create the user
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
       const user = userCredential.user;
 
       // Send email verification to the user
@@ -990,7 +1002,7 @@ export default function Signup() {
                   <span>Creating...</span>
                 </div>
               ) : (
-                'Sign Up'
+                'Sign up'
               )}
             </button>
           </div>
@@ -1004,3 +1016,4 @@ export default function Signup() {
     </div>
   );
 }
+
