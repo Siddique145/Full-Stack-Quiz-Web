@@ -3340,11 +3340,10 @@ export default function StudentDashboard() {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Button>Under Construction</Button>
+        <Button onClick={() => handleViewResult(record)}>View Details</Button>
       ),
     },
   ];
-
 
   return (
     <Spin spinning={loading} tip="Loading...">
