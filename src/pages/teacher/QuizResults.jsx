@@ -407,8 +407,13 @@
 
 
 
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; 
+import { useParams, useNavigate } from 'react-router-dom';
 import { db } from '../../firebase/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { ArrowLeftOutlined, TrophyFilled, GoldFilled, StarFilled } from '@ant-design/icons';
@@ -420,16 +425,17 @@ export default function QuizResults() {
   const [error, setError] = useState(null);
   const [studentsData, setStudentsData] = useState({});
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchResults = async () => {
       try {
         const quizDoc = await getDoc(doc(db, 'quizzes', quizId));
         if (quizDoc.exists()) {
-          setQuizResults(quizDoc.data());
+          const quizData = quizDoc.data();
+          setQuizResults(quizData);
 
-          const results = quizDoc.data().results || []; // Fallback to empty array if undefined
+          const results = quizData.results || []; // Fallback to empty array if undefined
           const studentIds = results.map(result => result.studentId);
 
           const studentPromises = studentIds.map(async studentId => {
@@ -466,7 +472,10 @@ export default function QuizResults() {
     return <div className="text-center mt-8 text-red-600">{error}</div>;
   }
 
-  const sortedResults = quizResults.results.sort((a, b) => b.score - a.score);
+  // Make sure quizResults and quizResults.results are defined before sorting
+  const sortedResults = quizResults && quizResults.results
+    ? quizResults.results.sort((a, b) => b.score - a.score)
+    : [];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -534,3 +543,4 @@ export default function QuizResults() {
     </div>
   );
 }
+
