@@ -525,7 +525,7 @@ export default function Login() {
               className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
             >
               {loading ? (
-                <span className="animate-spin inline-block w-6 h-6 border-4 border-t-4 border-white rounded-full"></span>
+                <span className="animate-spin inline-block w-6 h-6 border-4 border-t-4 border-white rounded-full">Logging </span>
               ) : (
                 'Log in'
               )}
