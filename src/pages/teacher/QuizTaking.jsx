@@ -2030,84 +2030,181 @@ export default function QuizTaking() {
 
     setTimeout(() => setIsAnswered(false), 500); // Re-enable after short delay
   };
-
-  const storeAnswerDetail = async (answerIndex) => {
-    try {
-      const question = quiz.questions[currentQuestion];
-      const isCorrect = answerIndex === question.correctAnswer;
-      const resultData = {
-        studentId: auth.currentUser.uid,
-        quizId,
-        currentQuestionId: question.id || `question_${currentQuestion + 1}`,
-        selectedAnswer: question.options[answerIndex] || "",
-        correctAnswer: question.options[question.correctAnswer] || "",
-        isCorrect,
-        submittedAt: new Date(),
-      };
-
-      // Store the answer detail in Firestore inside resultDetails subcollection
-      const resultDocRef = await addDoc(
-        collection(db, "allResults", quizId, "resultDetails"),
-        resultData
-      );
-      console.log("Answer detail stored in Firestore with ID:", resultDocRef.id);
-    } catch (err) {
-      console.error("Error storing answer detail:", err);
-    }
-  };
-
-  const submitQuiz = async () => {
-    setSubmitting(true);
-    const score = userAnswers.reduce((total, answer, index) => {
-      return total + (answer === quiz.questions[index].correctAnswer ? 1 : 0);
-    }, 0);
-    const percentage = (score / quiz.questions.length) * 100;
-
+const storeAnswerDetail = async (answerIndex) => {
+  try {
+    const question = quiz.questions[currentQuestion];
+    const isCorrect = answerIndex === question.correctAnswer;
     const resultData = {
       studentId: auth.currentUser.uid,
       quizId,
-      score,
-      totalQuestions: quiz.questions.length,
-      percentage,
-      attempted,
+      currentQuestionId: question.id || `question_${currentQuestion + 1}`,
+      selectedAnswer: question.options[answerIndex] || "",
+      correctAnswer: question.options[question.correctAnswer] || "",
+      isCorrect,
       submittedAt: new Date(),
-      resultDetails: quiz.questions.map((question, index) => ({
-        questionId: question.id || `question_${index + 1}`,
-        questionText: question.question,
-        options: question.options,
-        selectedAnswer: question.options[userAnswers[index]] || "",
-        correctAnswer: question.options[question.correctAnswer],
-        isCorrect: userAnswers[index] === question.correctAnswer,
-      })),
     };
 
-    try {
-      // Add complete quiz result data with detailed answer breakdown to Firestore
-      const allResultDocRef = await addDoc(
-        collection(db, "allResults"),
-        resultData
-      );
+    // Store the answer detail in Firestore inside resultDetails subcollection
+    // Save answer data under the quizId
+    const resultDocRef = await addDoc(
+      collection(db, "allResults", quizId, "resultDetails"),
+      resultData
+    );
+    console.log("Answer detail stored in Firestore with ID:", resultDocRef.id);
+  } catch (err) {
+    console.error("Error storing answer detail:", err);
+  }
+};
 
-      // Update the quiz document to reference this result
-      await updateDoc(doc(db, "quizzes", quizId), {
-        studentResults: arrayUnion(allResultDocRef.id),
-      });
+const submitQuiz = async () => {
+  setSubmitting(true);
+  const score = userAnswers.reduce((total, answer, index) => {
+    return total + (answer === quiz.questions[index].correctAnswer ? 1 : 0);
+  }, 0);
+  const percentage = (score / quiz.questions.length) * 100;
 
-      // Update the user's attemptedQuizzes field to prevent retaking the quiz
-      await updateDoc(doc(db, "users", auth.currentUser.uid), {
-        [`attemptedQuizzes.${quizId}`]: true,
-      });
-
-      navigate(`/student`, {
-        state: { score, percentage },
-      });
-    } catch (err) {
-      setError("Error submitting quiz");
-      console.error(err);
-    } finally {
-      setSubmitting(false);
-    }
+  const resultData = {
+    studentId: auth.currentUser.uid,
+    quizId,
+    score,
+    totalQuestions: quiz.questions.length,
+    percentage,
+    attempted,
+    submittedAt: new Date(),
+    resultDetails: quiz.questions.map((question, index) => ({
+      questionId: question.id || `question_${index + 1}`,
+      questionText: question.question,
+      options: question.options,
+      selectedAnswer: question.options[userAnswers[index]] || "",
+      correctAnswer: question.options[question.correctAnswer],
+      isCorrect: userAnswers[index] === question.correctAnswer,
+    })),
   };
+
+  try {
+    // Add complete quiz result data with detailed answer breakdown to Firestore
+    const allResultDocRef = await addDoc(
+      collection(db, "allResults"),
+      resultData
+    );
+    console.log("Quiz result saved in allResults with ID:", allResultDocRef.id);
+
+    // Update quiz document with the student's result
+    await updateDoc(doc(db, 'quizzes', quizId), {
+      results: arrayUnion(resultData),
+    });
+
+    // Now, save each user's result in the resultDetails subcollection of the quiz document
+    await addDoc(collection(db, 'allResults', quizId, 'resultDetails'), {
+      studentId: auth.currentUser.uid,
+      score,
+      resultDetails: resultData.resultDetails,
+      submittedAt: new Date(),
+    });
+
+    // Update the user's attemptedQuizzes field to prevent retaking the quiz
+    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+      [`attemptedQuizzes.${quizId}`]: true,
+    });
+
+    navigate(`/student`, {
+      state: { score, percentage },
+    });
+  } catch (err) {
+    setError("Error submitting quiz");
+    console.error(err);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+  // const storeAnswerDetail = async (answerIndex) => {
+  //   try {
+  //     const question = quiz.questions[currentQuestion];
+  //     const isCorrect = answerIndex === question.correctAnswer;
+  //     const resultData = {
+  //       studentId: auth.currentUser.uid,
+  //       quizId,
+  //       currentQuestionId: question.id || `question_${currentQuestion + 1}`,
+  //       selectedAnswer: question.options[answerIndex] || "",
+  //       correctAnswer: question.options[question.correctAnswer] || "",
+  //       isCorrect,
+  //       submittedAt: new Date(),
+  //     };
+
+  //     // Store the answer detail in Firestore inside resultDetails subcollection
+  //     // const resultDocRef = await addDoc(
+  //     //   collection(db, "allResults", quizId, "resultDetails"),
+  //     //   resultData
+  //     // );
+  //     console.log("Answer detail stored in Firestore with ID:", resultDocRef.id);
+  //   } catch (err) {
+  //     console.error("Error storing answer detail:", err);
+  //   }
+  // };
+
+  // const submitQuiz = async () => {
+  //   setSubmitting(true);
+  //   const score = userAnswers.reduce((total, answer, index) => {
+  //     return total + (answer === quiz.questions[index].correctAnswer ? 1 : 0);
+  //   }, 0);
+  //   const percentage = (score / quiz.questions.length) * 100;
+
+  //   const resultData = {
+  //     studentId: auth.currentUser.uid,
+  //     quizId,
+  //     score,
+  //     totalQuestions: quiz.questions.length,
+  //     percentage,
+  //     attempted,
+  //     submittedAt: new Date(),
+  //     resultDetails: quiz.questions.map((question, index) => ({
+  //       questionId: question.id || `question_${index + 1}`,
+  //       questionText: question.question,
+  //       options: question.options,
+  //       selectedAnswer: question.options[userAnswers[index]] || "",
+  //       correctAnswer: question.options[question.correctAnswer],
+  //       isCorrect: userAnswers[index] === question.correctAnswer,
+  //     })),
+  //   };
+
+  //   try {
+  //     // Add complete quiz result data with detailed answer breakdown to Firestore
+  //     const allResultDocRef = await addDoc(
+  //       collection(db, "allResults"),
+  //       resultData
+  //     );
+
+  //         // Update quiz document with the student's result
+  //     await updateDoc(doc(db, 'quizzes', quizId), {
+  //       results: arrayUnion(resultData),
+  //     });
+
+  //     // Add result to the allResults collection for easier data access and analysis
+  //     await addDoc(collection(db, 'allResults'), {
+  //       quizId: quizId,
+  //       ...resultData,
+  //     });
+  //     // // Update the quiz document to reference this result
+  //     // await updateDoc(doc(db, "quizzes", quizId), {
+  //     //   studentResults: arrayUnion(allResultDocRef.id),
+  //     // });
+
+  //     // Update the user's attemptedQuizzes field to prevent retaking the quiz
+  //     await updateDoc(doc(db, "users", auth.currentUser.uid), {
+  //       [`attemptedQuizzes.${quizId}`]: true,
+  //     });
+
+  //     navigate(`/student`, {
+  //       state: { score, percentage },
+  //     });
+  //   } catch (err) {
+  //     setError("Error submitting quiz");
+  //     console.error(err);
+  //   } finally {
+  //     setSubmitting(false);
+  //   }
+  // };
 
   const handleGoBack = () => {
     navigate("/student");
