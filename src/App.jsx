@@ -1,29 +1,4 @@
 
-// // import { BrowserRouter, Route, Routes } from "react-router-dom";
-// // import Login from "./pages/Login";
-// // import SignUp from "./pages/Signup";
-// // import QuizHome from "./pages/QuizHome";
-
-// // function App() {
-// //   return (
-// //     <BrowserRouter>
-// //       <Routes>
-// //         <Route path="/login" element={<Login/>}></Route>
-// //         <Route path="/" element={<SignUp/>}></Route>
-// //         <Route path="/main" element={<QuizHome/>}></Route>
-// //         {/* <Route path="/login" element={<Login />}></Route>
-// //         {/* <Route path="/home" element={<Home />}></Route> */}
-// //         {/* <Route path="/main" element={<MainPage />}></Route>
-// //         <Route path="/main/footer" element={<MainPage />}></Route>
-// //         <Route path="/products" element={<Products />}></Route>
-// //         <Route path="/products/:id" element={<ProductsDetail/>}></Route>  */}
-// //       </Routes>
-// //     </BrowserRouter>
-// //   );
-// // }
-
-// // export default App;
-
 
 
 
@@ -31,39 +6,97 @@
 
 // import React from 'react';
 // import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-// // import { AuthProvider } from './contexts/AuthContext';
+// import { AuthProvider, useAuth } from './contexts/AuthContext';
 // import Login from './pages/Login';
 // import Signup from './pages/Signup';
-// import StudentDashboard from './pages/student/StudentDashboard';
 // import AdminDashboard from './pages/admin/AdminDashboard';
 // import TeacherDashboard from './pages/teacher/TeacherDashboard';
+// import StudentDashboard from './pages/student/StudentDashboard';
 // import QuizCreation from './pages/teacher/QuizCreation';
 // import QuizTaking from './pages/teacher/QuizTaking';
-// import QuizResult from './pages/teacher/QuizResults';
-// // import AdminDashboard from './components/AdminDashboard';
-// // import TeacherDashboard from './components/TeacherDashboard';
-// // import StudentDashboard from './components/StudentDashboard';
-// // import QuizCreation from './components/QuizCreation';
-// // import QuizTaking from './components/QuizTaking';
-// // import Results from './components/Results';
+// import QuizResults from './pages/teacher/QuizResults';
+// import NotFound from './pages/Notfound';
+
+// const PrivateRoute = ({ element, allowedRoles }) => {
+//   const { currentUser, userData } = useAuth();
+  
+//   if (!currentUser) {
+//     return <Navigate to="/login" />;
+//   }
+
+//   if (allowedRoles && !allowedRoles.includes(userData?.role)) {
+//     return <Navigate to="/" />;
+//   }
+
+//   return element;
+// };
 
 // function App() {
 //   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/" element={<Login />} />
-//         <Route path="/signup" element={<Signup />} />
-//         <Route path="/admin" element={<AdminDashboard/>} />
-//         <Route path="/teacher" element={<TeacherDashboard/>} />
-//         <Route path="/student" element={<StudentDashboard/>} />
-//         <Route path="/create-quiz" element={<QuizCreation/>} />
-//         <Route path="/take-quiz/:quizId" element={<QuizTaking/>} />
-//         <Route path="/results/:quizId" element={<QuizResult/>} /> 
-        
-//         {/* Redirect to "/" if no route matches */}
-//         <Route path="*" element={<Navigate to="/" />} />
-//       </Routes>
-//     </Router>
+//     <AuthProvider>
+//       <Router>
+//         <Routes>
+//           <Route path="/login" element={<Login/>} />
+//           <Route path="/signup" element={<Signup/>} />
+//           <Route 
+//             path="/admin" 
+//             element={
+//               <PrivateRoute 
+//                 element={<AdminDashboard/>} 
+//                 allowedRoles={['admin']} 
+//               />
+//             } 
+//           />
+//           <Route 
+//             path="/teacher" 
+//             element={
+//               <PrivateRoute 
+//                 element={<TeacherDashboard/>} 
+//                 allowedRoles={['admin', 'teacher']} 
+//               />
+//             } 
+//           />
+//           <Route 
+//             path="/student" 
+//             element={
+//               <PrivateRoute 
+//                 element={<StudentDashboard/>} 
+//                 allowedRoles={['student']} 
+//               />
+//             } 
+//           />
+//           <Route 
+//             path="/create-quiz" 
+//             element={
+//               <PrivateRoute 
+//                 element={<QuizCreation/>} 
+//                 allowedRoles={['admin', 'teacher']} 
+//               />
+//             } 
+//           />
+//           <Route 
+//             path="/take-quiz/:quizId" 
+//             element={
+//               <PrivateRoute 
+//                 element={<QuizTaking/>} 
+//                 allowedRoles={['student']} 
+//               />
+//             } 
+//           />
+//           <Route 
+//             path="/results/:quizId" 
+//             element={
+//               <PrivateRoute 
+//                 element={<QuizResults/>} 
+//                 allowedRoles={['admin', 'teacher']} 
+//               />
+//             } 
+//           />
+//           <Route path="/" element={<Navigate to="/login" />} />
+//           <Route path="*" element={<NotFound/>} />
+//         </Routes>
+//       </Router>
+//     </AuthProvider>
 //   );
 // }
 
@@ -72,25 +105,15 @@
 
 
 
-//uper code was perfect ok 
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { Spin } from 'antd'; // Import Spin from Ant Design
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -101,19 +124,10 @@ import QuizCreation from './pages/teacher/QuizCreation';
 import QuizTaking from './pages/teacher/QuizTaking';
 import QuizResults from './pages/teacher/QuizResults';
 import NotFound from './pages/Notfound';
-// import Login from './components/Login';
-// import Signup from './components/Signup';
-// import AdminDashboard from './components/AdminDashboard';
-// import TeacherDashboard from './components/TeacherDashboard';
-// import StudentDashboard from './components/StudentDashboard';
-// import QuizCreation from './components/QuizCreation';
-// import QuizTaking from './components/QuizTaking';
-// import Results from './components/Results';
-// import NotFound from './components/NotFound';
 
 const PrivateRoute = ({ element, allowedRoles }) => {
   const { currentUser, userData } = useAuth();
-  
+
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
@@ -126,68 +140,77 @@ const PrivateRoute = ({ element, allowedRoles }) => {
 };
 
 function App() {
+  const [loading, setLoading] = useState(true); // Loading state
+
+  // Simulate data fetching or real data fetching
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Simulate a delay (e.g., API call or Firebase data fetch)
+        setTimeout(() => {
+          setLoading(false); // Set loading to false after data is fetched
+        }, 2000); // Simulate 2-second loading time
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <Spin  tip="Loading..." />
+      </div>
+    );
+  }
+
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login/>} />
-          <Route path="/signup" element={<Signup/>} />
-          <Route 
-            path="/admin" 
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/admin"
             element={
-              <PrivateRoute 
-                element={<AdminDashboard/>} 
-                allowedRoles={['admin']} 
-              />
-            } 
+              <PrivateRoute element={<AdminDashboard />} allowedRoles={['admin']} />
+            }
           />
-          <Route 
-            path="/teacher" 
+          <Route
+            path="/teacher"
             element={
-              <PrivateRoute 
-                element={<TeacherDashboard/>} 
-                allowedRoles={['admin', 'teacher']} 
-              />
-            } 
+              <PrivateRoute element={<TeacherDashboard />} allowedRoles={['admin', 'teacher']} />
+            }
           />
-          <Route 
-            path="/student" 
+          <Route
+            path="/student"
             element={
-              <PrivateRoute 
-                element={<StudentDashboard/>} 
-                allowedRoles={['student']} 
-              />
-            } 
+              <PrivateRoute element={<StudentDashboard />} allowedRoles={['student']} />
+            }
           />
-          <Route 
-            path="/create-quiz" 
+          <Route
+            path="/create-quiz"
             element={
-              <PrivateRoute 
-                element={<QuizCreation/>} 
-                allowedRoles={['admin', 'teacher']} 
-              />
-            } 
+              <PrivateRoute element={<QuizCreation />} allowedRoles={['admin', 'teacher']} />
+            }
           />
-          <Route 
-            path="/take-quiz/:quizId" 
+          <Route
+            path="/take-quiz/:quizId"
             element={
-              <PrivateRoute 
-                element={<QuizTaking/>} 
-                allowedRoles={['student']} 
-              />
-            } 
+              <PrivateRoute element={<QuizTaking />} allowedRoles={['student']} />
+            }
           />
-          <Route 
-            path="/results/:quizId" 
+          <Route
+            path="/results/:quizId"
             element={
-              <PrivateRoute 
-                element={<QuizResults/>} 
-                allowedRoles={['admin', 'teacher']} 
-              />
-            } 
+              <PrivateRoute element={<QuizResults />} allowedRoles={['admin', 'teacher']} />
+            }
           />
           <Route path="/" element={<Navigate to="/login" />} />
-          <Route path="*" element={<NotFound/>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </AuthProvider>
