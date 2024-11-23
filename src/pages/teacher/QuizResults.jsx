@@ -70,20 +70,6 @@
 // // // // //   );
 // // // // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // // // import React, { useState, useEffect } from 'react';
 // // // // import { useParams } from 'react-router-dom';
 // // // // import { db } from '../../firebase/firebase';
@@ -158,14 +144,6 @@
 // // // //   );
 // // // // }
 
-
-
-
-
-
-
-
-
 // // // import React, { useState, useEffect } from 'react';
 // // // import { useParams } from 'react-router-dom';
 // // // import { db } from '../../firebase/firebase';
@@ -189,7 +167,7 @@
 // // //           // Fetch students' names from the 'users' collection based on the studentId in quizResults
 // // //           const results = quizDoc.data().results;
 // // //           const studentIds = results.map(result => result.studentId);
-          
+
 // // //           const studentPromises = studentIds.map(async studentId => {
 // // //             const studentDoc = await getDoc(doc(db, 'users', studentId));
 // // //             return { studentId, studentName: studentDoc.exists() ? studentDoc.data().name : 'Unknown' };
@@ -262,11 +240,7 @@
 // // //     </div>
 // // //   );
 // // // }
-// // // // 
-
-
-
-
+// // // //
 
 // // import React, { useState, useEffect } from 'react';
 // // import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
@@ -294,7 +268,7 @@
 // //           // Fetch students' names from the 'users' collection based on the studentId in quizResults
 // //           const results = quizDoc.data().results;
 // //           const studentIds = results.map(result => result.studentId);
-          
+
 // //           const studentPromises = studentIds.map(async studentId => {
 // //             const studentDoc = await getDoc(doc(db, 'users', studentId));
 // //             return { studentId, studentName: studentDoc.exists() ? studentDoc.data().name : 'Unknown' };
@@ -336,8 +310,8 @@
 // //   return (
 // //     <div className="container mx-auto px-4 py-8">
 // //       {/* Back button with the Ant Design Back Arrow icon */}
-// //       <button 
-// //         onClick={() => navigate('/teacher')} 
+// //       <button
+// //         onClick={() => navigate('/teacher')}
 // //         className="mb-4 flex items-center text-blue-500 hover:text-blue-700"
 // //       >
 // //         <ArrowLeftOutlined className="mr-2" /> {/* Ant Design Back Arrow icon */}
@@ -401,13 +375,6 @@
 // //     </div>
 // //   );
 // // }
-
-
-
-
-
-
-
 
 // import React, { useState, useEffect } from 'react';
 // import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
@@ -487,8 +454,8 @@
 //   return (
 //     <div className="container mx-auto px-4 py-8">
 //       {/* Back button with the Ant Design Back Arrow icon */}
-//       <button 
-//         onClick={() => navigate('/teacher')} 
+//       <button
+//         onClick={() => navigate('/teacher')}
 //         className="mb-4 flex items-center text-blue-500 hover:text-blue-700"
 //       >
 //         <ArrowLeftOutlined className="mr-2" />
@@ -538,7 +505,7 @@
 //                     <td className="py-2 px-4 border-b">{result.score} / {result.totalQuestions}</td>
 //                     <td className="py-2 px-4 border-b">
 //                       {isFail ? 'Fail' : `${result.percentage.toFixed(2)}%`}
-//                     </td> 
+//                     </td>
 //                     <td className="py-2 px-4 border-b">{new Date(result.submittedAt.toDate()).toLocaleString()}</td>
 //                   </tr>
 //                 );
@@ -555,131 +522,167 @@
 
 
 
-
-
-
-
-'use client'
-
-import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { db } from '../../firebase/firebase'
-import { doc, getDoc, collection, getDocs, query, where, orderBy } from 'firebase/firestore'
-import { ArrowLeftOutlined, TrophyFilled, GoldFilled, StarFilled, FileTextOutlined } from '@ant-design/icons'
-import { Button } from '@/components/ui/button'
-import { jsPDF } from 'jspdf'
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { db } from "../../firebase/firebase";
+import {
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+} from "firebase/firestore";
+import {
+  ArrowLeftOutlined,
+  TrophyFilled,
+  GoldFilled,
+  StarFilled,
+  FileTextOutlined,
+} from "@ant-design/icons";
+import { Button } from 'antd'
+import { jsPDF } from "jspdf";
 
 export default function QuizResults() {
-  const { quizId } = useParams()
-  const [quizDetails, setQuizDetails] = useState(null)
-  const [quizResults, setQuizResults] = useState([])
-  const [studentsData, setStudentsData] = useState({})
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { quizId } = useParams();
+  const [quizDetails, setQuizDetails] = useState(null);
+  const [quizResults, setQuizResults] = useState([]);
+  const [studentsData, setStudentsData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQuizData = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
         if (!quizId) {
-          setError('Quiz ID is missing')
-          return
+          setError("Quiz ID is missing");
+          return;
         }
 
         // Fetch quiz details
-        const quizDoc = await getDoc(doc(db, 'quizzes', quizId))
+        const quizDoc = await getDoc(doc(db, "quizzes", quizId));
         if (!quizDoc.exists()) {
-          setError('Quiz not found')
-          return
+          setError("Quiz not found");
+          return;
         }
-        const quizData = quizDoc.data()
-        setQuizDetails(quizData)
+        const quizData = quizDoc.data();
+        setQuizDetails(quizData);
 
         // Fetch quiz results
-        const results = quizData.results || []
-        const resultDetails = results.flatMap(result => result.resultDetails || [])
-        
+        const results = quizData.results || [];
+        const resultDetails = results.flatMap(
+          (result) => result.resultDetails || []
+        );
+
         // Sort results by score and percentage
         const sortedResults = resultDetails.sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score
-          return b.percentage - a.percentage
-        })
+          if (b.score !== a.score) return b.score - a.score;
+          return b.percentage - a.percentage;
+        });
 
-        setQuizResults(sortedResults)
+        setQuizResults(sortedResults);
 
         // Fetch student data for all students who attempted the quiz
-        const studentIds = sortedResults.map(result => result.studentId).filter(Boolean)
+        const studentIds = sortedResults
+          .map((result) => result.studentId)
+          .filter(Boolean);
         if (studentIds.length > 0) {
           const studentsQuery = query(
-            collection(db, 'users'),
-            where('__name__', 'in', studentIds)
-          )
-          const studentsQuerySnapshot = await getDocs(studentsQuery)
-          const studentMap = {}
-          studentsQuerySnapshot.forEach(doc => {
-            studentMap[doc.id] = doc.data().name || 'Unknown'
-          })
-          setStudentsData(studentMap)
+            collection(db, "users"),
+            where("__name__", "in", studentIds)
+          );
+          const studentsQuerySnapshot = await getDocs(studentsQuery);
+          const studentMap = {};
+          studentsQuerySnapshot.forEach((doc) => {
+            studentMap[doc.id] = doc.data().name || "Unknown";
+          });
+          setStudentsData(studentMap);
         }
       } catch (err) {
-        setError('Error fetching quiz data: ' + err.message)
-        console.error(err)
+        setError("Error fetching quiz data: " + err.message);
+        console.error(err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchQuizData()
-  }, [quizId])
+    fetchQuizData();
+  }, [quizId]);
 
   const generatePDF = (result, studentName) => {
-    const pdf = new jsPDF()
-    pdf.setFontSize(18)
-    pdf.text('Quiz Result', 20, 20)
-    pdf.setFontSize(12)
-    pdf.text(`Student: ${studentName}`, 20, 30)
-    pdf.text(`Quiz: ${quizDetails?.title || 'Unknown Quiz'}`, 20, 40)
-    pdf.text(`Score: ${result.score} / ${quizDetails?.questions?.length || 'Unknown'}`, 20, 50)
-    pdf.text(`Percentage: ${result.percentage?.toFixed(2) || 0}%`, 20, 60)
-    pdf.text(`Submitted At: ${result.submittedAt?.toDate().toLocaleString() || 'Unknown'}`, 20, 70)
+    const pdf = new jsPDF();
+    pdf.setFontSize(18);
+    pdf.text("Quiz Result", 20, 20);
+    pdf.setFontSize(12);
+    pdf.text(`Student: ${studentName}`, 20, 30);
+    pdf.text(`Quiz: ${quizDetails?.title || "Unknown Quiz"}`, 20, 40);
+    pdf.text(
+      `Score: ${result.score} / ${quizDetails?.questions?.length || "Unknown"}`,
+      20,
+      50
+    );
+    pdf.text(`Percentage: ${result.percentage?.toFixed(2) || 0}%`, 20, 60);
+    pdf.text(
+      `Submitted At: ${
+        result.submittedAt?.toDate().toLocaleString() || "Unknown"
+      }`,
+      20,
+      70
+    );
 
     // Add detailed results
-    pdf.text('Detailed Results:', 20, 90)
+    pdf.text("Detailed Results:", 20, 90);
     if (result.options && Array.isArray(result.options)) {
       result.options.forEach((option, index) => {
-        const yPos = 100 + (index * 30)
-        pdf.text(`Question ${index + 1}: ${result.questionText || 'Unknown Question'}`, 20, yPos)
-        pdf.text(`Your Answer: ${result.selectedAnswer || 'Not answered'}`, 30, yPos + 10)
-        pdf.text(`Correct Answer: ${result.correctAnswer || 'Unknown'}`, 30, yPos + 20)
-      })
+        const yPos = 100 + index * 30;
+        pdf.text(
+          `Question ${index + 1}: ${result.questionText || "Unknown Question"}`,
+          20,
+          yPos
+        );
+        pdf.text(
+          `Your Answer: ${result.selectedAnswer || "Not answered"}`,
+          30,
+          yPos + 10
+        );
+        pdf.text(
+          `Correct Answer: ${result.correctAnswer || "Unknown"}`,
+          30,
+          yPos + 20
+        );
+      });
     } else {
-      pdf.text('No detailed results available', 20, 100)
+      pdf.text("No detailed results available", 20, 100);
     }
 
-    pdf.save(`${studentName}_quiz_result.pdf`)
-  }
+    pdf.save(`${studentName}_quiz_result.pdf`);
+  };
 
   if (loading) {
-    return <div className="text-center mt-8">Loading...</div>
+    return <div className="text-center mt-8">Loading...</div>;
   }
 
   if (error) {
-    return <div className="text-center mt-8 text-red-600">{error}</div>
+    return <div className="text-center mt-8 text-red-600">{error}</div>;
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <Button
-        onClick={() => navigate('/teacher')}
+        onClick={() => navigate("/teacher")}
         className="mb-4 flex items-center text-blue-500 hover:text-blue-700"
       >
         <ArrowLeftOutlined className="mr-2" />
         Back
       </Button>
 
-      <h1 className="text-3xl font-bold mb-6">Quiz Results: {quizDetails?.title || 'Unknown Quiz'}</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        Quiz Results: {quizDetails?.title || "Unknown Quiz"}
+      </h1>
       {quizResults.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white">
@@ -695,34 +698,60 @@ export default function QuizResults() {
             </thead>
             <tbody>
               {quizResults.map((result, index) => {
-                const studentName = (result.studentId && studentsData[result.studentId]) || 'Unknown'
-                let awardIcon
-                let awardText = ''
-                const isFail = (result.percentage || 0) < 30
+                const studentName =
+                  (result.studentId && studentsData[result.studentId]) ||
+                  "Unknown";
+                let awardIcon;
+                let awardText = "";
+                const isFail = (result.percentage || 0) < 30;
 
-                if (index === 0 || (index > 0 && result.score === quizResults[0].score && result.percentage === quizResults[0].percentage)) {
-                  awardIcon = <TrophyFilled style={{ color: '#FFD700' }} />
-                  awardText = '1st'
-                } else if (index === 1 || (index > 1 && result.score === quizResults[1].score && result.percentage === quizResults[1].percentage)) {
-                  awardIcon = <GoldFilled style={{ color: '#C0C0C0' }} />
-                  awardText = '2nd'
-                } else if (index === 2 || (index > 2 && result.score === quizResults[2].score && result.percentage === quizResults[2].percentage)) {
-                  awardIcon = <StarFilled style={{ color: '#CD7F32' }} />
-                  awardText = '3rd'
+                if (
+                  index === 0 ||
+                  (index > 0 &&
+                    result.score === quizResults[0].score &&
+                    result.percentage === quizResults[0].percentage)
+                ) {
+                  awardIcon = <TrophyFilled style={{ color: "#FFD700" }} />;
+                  awardText = "1st";
+                } else if (
+                  index === 1 ||
+                  (index > 1 &&
+                    result.score === quizResults[1].score &&
+                    result.percentage === quizResults[1].percentage)
+                ) {
+                  awardIcon = <GoldFilled style={{ color: "#C0C0C0" }} />;
+                  awardText = "2nd";
+                } else if (
+                  index === 2 ||
+                  (index > 2 &&
+                    result.score === quizResults[2].score &&
+                    result.percentage === quizResults[2].percentage)
+                ) {
+                  awardIcon = <StarFilled style={{ color: "#CD7F32" }} />;
+                  awardText = "3rd";
                 }
 
                 return (
-                  <tr key={result.questionId || index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                  <tr
+                    key={result.questionId || index}
+                    className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                  >
                     <td className="py-2 px-4 border-b">
                       {awardIcon} {awardText}
                     </td>
                     <td className="py-2 px-4 border-b">{studentName}</td>
-                    <td className="py-2 px-4 border-b">{result.score || 0} / {quizDetails?.questions?.length || 'Unknown'}</td>
                     <td className="py-2 px-4 border-b">
-                      {isFail ? 'Fail' : `${(result.percentage || 0).toFixed(2)}%`}
+                      {result.score || 0} /{" "}
+                      {quizDetails?.questions?.length || "Unknown"}
                     </td>
                     <td className="py-2 px-4 border-b">
-                      {result.submittedAt?.toDate().toLocaleString() || 'Unknown'}
+                      {isFail
+                        ? "Fail"
+                        : `${(result.percentage || 0).toFixed(2)}%`}
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      {result.submittedAt?.toDate().toLocaleString() ||
+                        "Unknown"}
                     </td>
                     <td className="py-2 px-4 border-b">
                       <Button
@@ -734,31 +763,19 @@ export default function QuizResults() {
                       </Button>
                     </td>
                   </tr>
-                )
+                );
               })}
             </tbody>
           </table>
         </div>
       ) : (
-        <p className="text-center mt-4">No results available for this quiz yet.</p>
+        <p className="text-center mt-4">
+          No results available for this quiz yet.
+        </p>
       )}
     </div>
-  )
+  );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 'use client'
 
@@ -929,7 +946,7 @@ export default function QuizResults() {
 //       </Button>
 
 //       <h1 className="text-3xl font-bold mb-6">Quiz Results: {quizDetails?.title || 'Unknown Quiz'}</h1>
-      
+
 //       {quizResults.length > 0 ? (
 //         <Table columns={columns} data={quizResults} />
 //       ) : (
@@ -947,14 +964,14 @@ export default function QuizResults() {
 //               <p><strong>Score:</strong> {selectedResult.score} / {selectedResult.totalQuestions}</p>
 //               <p><strong>Percentage:</strong> {selectedResult.percentage.toFixed(2)}%</p>
 //               <p><strong>Submitted At:</strong> {new Date(selectedResult.submittedAt.toDate()).toLocaleString()}</p>
-              
+
 //               <Table
 //                 columns={[
 //                   { accessorKey: 'questionText', header: 'Question' },
 //                   { accessorKey: 'selectedAnswer', header: 'Your Answer' },
 //                   { accessorKey: 'correctAnswer', header: 'Correct Answer' },
-//                   { 
-//                     accessorKey: 'isCorrect', 
+//                   {
+//                     accessorKey: 'isCorrect',
 //                     header: 'Result',
 //                     cell: ({ row }) => row.original.isCorrect ? 'Correct' : 'Incorrect'
 //                   },
