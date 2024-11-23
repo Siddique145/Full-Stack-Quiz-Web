@@ -380,7 +380,7 @@ export default function StudentDashboard() {
                         <div className="mt-3">
                           {/* Conditionally render based on if the quiz has been attempted */}
                           {isQuizAttempted(quiz.id) ? (
-                            <span className="text-green-800 bg-green-300 p-2 w-full text-sm font-semibold">
+                            <span className="text-white bg-green-700 p-2 w-full text-sm font-semibold">
                               Completed
                             </span>
                           ) : (
@@ -546,7 +546,7 @@ export default function StudentDashboard() {
             <Title level={4}>{studentName}</Title>
             <Text>Email: {studentEmail}</Text>
             <br />
-            <Text>Password: {studentPassword}</Text>
+            {/* <Text>Password: {studentPassword}</Text> */}
           </div>
         </Modal>
       </Layout>
