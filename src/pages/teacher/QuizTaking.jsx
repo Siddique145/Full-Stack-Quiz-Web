@@ -570,16 +570,22 @@ export default function QuizTaking() {
       const userDocRef = doc(db, "users", auth.currentUser.uid)
       const userDocSnapshot = await getDoc(userDocRef)
       let userName = "Unknown Student" // Default name if not found
+      let userParentNumber = ""
+      let userPhoneNumber = ""
 
       if (userDocSnapshot.exists()) {
         const userData = userDocSnapshot.data()
-        userName = userData.name || userName // Get name if exists, else fallback to default
+        userName = userData.name || userName, // Get name if exists, else fallback to default
+        userParentNumber = userData.parentPhone || userParentNumber,
+        userPhoneNumber = userData.phone || userPhoneNumber
       }
 
       // Save the result in the 'wholeStudentResults' collection under the quizId document
       const studentResult = {
         studentId: auth.currentUser.uid,
         name: userName, // Set name from Firestore
+        parentPhone : userParentNumber ,
+        phone :  userPhoneNumber,
         score,
         percentage,
         resultDetails: resultData.resultDetails,
