@@ -834,289 +834,387 @@
 
 
 
-import React, { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { db } from "../../firebase/firebase"
-import { doc, getDoc } from "firebase/firestore"
-import {
-  ArrowLeftOutlined,
-  TrophyFilled,
-  GoldFilled,
-  StarFilled,
-  FileTextOutlined,
-  LoadingOutlined
-} from "@ant-design/icons"
-import { Button, Table, Tag, Spin, message } from "antd"
-import { jsPDF } from "jspdf"
-import "jspdf-autotable"
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+// import React, { useState, useEffect } from "react"
+// import { useParams, useNavigate } from "react-router-dom"
+// import { db } from "../../firebase/firebase"
+// import { doc, getDoc } from "firebase/firestore"
+// import {
+//   ArrowLeftOutlined,
+//   TrophyFilled,
+//   GoldFilled,
+//   StarFilled,
+//   FileTextOutlined,
+//   LoadingOutlined
+// } from "@ant-design/icons"
+// import { Button, Table, Tag, Spin, message } from "antd"
+// import { jsPDF } from "jspdf"
+// import "jspdf-autotable"
+// import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
 
-export default function QuizResults() {
-  const { quizId } = useParams()
-  const [quizDetails, setQuizDetails] = useState(null)
-  const [quizResults, setQuizResults] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+// export default function QuizResults() {
+//   const { quizId } = useParams()
+//   const [quizDetails, setQuizDetails] = useState(null)
+//   const [quizResults, setQuizResults] = useState([])
+//   const [loading, setLoading] = useState(true)
+//   const [error, setError] = useState(null)
 
-  const navigate = useNavigate()
+//   const navigate = useNavigate()
 
-  useEffect(() => {
-    const fetchQuizData = async () => {
-      setLoading(true)
-      try {
-        if (!quizId) {
-          throw new Error("Quiz ID is missing")
-        }
+//   useEffect(() => {
+//     const fetchQuizData = async () => {
+//       setLoading(true)
+//       try {
+//         if (!quizId) {
+//           throw new Error("Quiz ID is missing")
+//         }
 
-        // Fetch quiz details
-        const quizDoc = await getDoc(doc(db, "quizzes", quizId))
-        if (!quizDoc.exists()) {
-          throw new Error("Quiz not found")
-        }
-        const quizData = quizDoc.data()
-        setQuizDetails(quizData)
+//         // Fetch quiz details
+//         const quizDoc = await getDoc(doc(db, "quizzes", quizId))
+//         if (!quizDoc.exists()) {
+//           throw new Error("Quiz not found")
+//         }
+//         const quizData = quizDoc.data()
+//         setQuizDetails(quizData)
 
-        // Fetch results from wholeStudentResults collection
-        const resultsDoc = await getDoc(doc(db, "wholeStudentResults", quizId))
-        if (!resultsDoc.exists()) {
-          throw new Error("No results found for this quiz")
-        }
-        const resultsData = resultsDoc.data()
+//         // Fetch results from wholeStudentResults collection
+//         const resultsDoc = await getDoc(doc(db, "wholeStudentResults", quizId))
+//         if (!resultsDoc.exists()) {
+//           throw new Error("No results found for this quiz")
+//         }
+//         const resultsData = resultsDoc.data()
 
-        // Process and sort the results
-        const processedResults = resultsData.studentsResults.map(
-          (result, index) => ({
-            ...result,
-            key: index,
-            submittedAt: result.submittedAt?.toDate() // Convert Firestore Timestamp to Date
-          })
-        )
+//         // Process and sort the results
+//         const processedResults = resultsData.studentsResults.map(
+//           (result, index) => ({
+//             ...result,
+//             key: index,
+//             submittedAt: result.submittedAt?.toDate() // Convert Firestore Timestamp to Date
+//           })
+//         )
 
-        const sortedResults = processedResults.sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score
-          return b.percentage - a.percentage
-        })
+//         const sortedResults = processedResults.sort((a, b) => {
+//           if (b.score !== a.score) return b.score - a.score
+//           return b.percentage - a.percentage
+//         })
 
-        setQuizResults(sortedResults)
-      } catch (err) {
-        setError(err.message)
-        message.error(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
+//         setQuizResults(sortedResults)
+//       } catch (err) {
+//         setError(err.message)
+//         message.error(err.message)
+//       } finally {
+//         setLoading(false)
+//       }
+//     }
 
-    fetchQuizData()
-  }, [quizId])
+//     fetchQuizData()
+//   }, [quizId])
 
-  const generatePDF = async (result) => {
-    const pdf = new jsPDF()
+//   const generatePDF = async (result) => {
+//     const pdf = new jsPDF()
 
-    // Set up styles
-    pdf.setFont("helvetica", "bold")
-    pdf.setFontSize(20)
-    pdf.setTextColor(44, 62, 80) // Dark blue color
+//     // Set up styles
+//     pdf.setFont("helvetica", "bold")
+//     pdf.setFontSize(20)
+//     pdf.setTextColor(44, 62, 80) // Dark blue color
 
-    // Title
-    pdf.text("Quiz Result Certificate", 105, 30, { align: "center" })
+//     // Title
+//     pdf.text("Quiz Result Certificate", 105, 30, { align: "center" })
 
-    pdf.setFont("helvetica", "normal")
-    pdf.setFontSize(12)
-    pdf.setTextColor(52, 73, 94) // Slightly lighter blue
+//     pdf.setFont("helvetica", "normal")
+//     pdf.setFontSize(12)
+//     pdf.setTextColor(52, 73, 94) // Slightly lighter blue
 
-    // Student info
-    pdf.text(`Student: ${result.name || "Unknown"}`, 20, 50)
-    pdf.text(`Quiz: ${quizDetails?.title || "Unknown Quiz"}`, 20, 60)
-    pdf.text(
-      `Score: ${result.score} / ${quizDetails?.questions?.length || "Unknown"}`,
-      20,
-      70
-    )
-    pdf.text(`Percentage: ${result.percentage?.toFixed(2) || 0}%`, 20, 80)
-    pdf.text(
-      `Submitted At: ${result.submittedAt?.toLocaleString() || "Unknown"}`,
-      20,
-      90
-    )
+//     // Student info
+//     pdf.text(`Student: ${result.name || "Unknown"}`, 20, 50)
+//     pdf.text(`Quiz: ${quizDetails?.title || "Unknown Quiz"}`, 20, 60)
+//     pdf.text(
+//       `Score: ${result.score} / ${quizDetails?.questions?.length || "Unknown"}`,
+//       20,
+//       70
+//     )
+//     pdf.text(`Percentage: ${result.percentage?.toFixed(2) || 0}%`, 20, 80)
+//     pdf.text(
+//       `Submitted At: ${result.submittedAt?.toLocaleString() || "Unknown"}`,
+//       20,
+//       90
+//     )
 
-    // Add detailed results
-    pdf.setFontSize(14)
-    pdf.setFont("helvetica", "bold")
-    pdf.text("Detailed Results:", 20, 110)
+//     // Add detailed results
+//     pdf.setFontSize(14)
+//     pdf.setFont("helvetica", "bold")
+//     pdf.text("Detailed Results:", 20, 110)
 
-    if (result.resultDetails && Array.isArray(result.resultDetails)) {
-      const tableData = result.resultDetails.map((detail, index) => [
-        index + 1,
-        detail.questionText || "Unknown Question",
-        detail.selectedAnswer || "Not answered",
-        detail.correctAnswer || "Unknown",
-        detail.isCorrect ? "Correct" : "Incorrect"
-      ])
+//     if (result.resultDetails && Array.isArray(result.resultDetails)) {
+//       const tableData = result.resultDetails.map((detail, index) => [
+//         index + 1,
+//         detail.questionText || "Unknown Question",
+//         detail.selectedAnswer || "Not answered",
+//         detail.correctAnswer || "Unknown",
+//         detail.isCorrect ? "Correct" : "Incorrect"
+//       ])
 
-      pdf.autoTable({
-        startY: 120,
-        head: [["#", "Question", "Your Answer", "Correct Answer", "Result"]],
-        body: tableData,
-        theme: "striped",
-        headStyles: { fillColor: [41, 128, 185], textColor: 255 },
-        alternateRowStyles: { fillColor: [235, 245, 251] }
-      })
-    } else {
-      pdf.text("No detailed results available", 20, 120)
-    }
+//       pdf.autoTable({
+//         startY: 120,
+//         head: [["#", "Question", "Your Answer", "Correct Answer", "Result"]],
+//         body: tableData,
+//         theme: "striped",
+//         headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+//         alternateRowStyles: { fillColor: [235, 245, 251] }
+//       })
+//     } else {
+//       pdf.text("No detailed results available", 20, 120)
+//     }
 
-    // Create Blob from PDF
-    const pdfBlob = pdf.output("blob")
+//     // Create Blob from PDF
+//     const pdfBlob = pdf.output("blob")
 
-    // Upload the Blob to Firebase Storage
-    const storage = getStorage()
-    const storageRef = ref(storage, `quiz_results/${result.name}_${result.score}.pdf`)
-    const uploadTask = uploadBytesResumable(storageRef, pdfBlob)
+//     // Upload the Blob to Firebase Storage
+//     const storage = getStorage()
+//     const storageRef = ref(storage, `quiz_results/${result.name}_${result.score}.pdf`)
+//     const uploadTask = uploadBytesResumable(storageRef, pdfBlob)
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // You can handle progress here (optional)
-      },
-      (error) => {
-        console.error("Error uploading PDF:", error)
-      },
-      async () => {
-        // Get the download URL for the uploaded file
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
+//     uploadTask.on(
+//       "state_changed",
+//       (snapshot) => {
+//         // You can handle progress here (optional)
+//       },
+//       (error) => {
+//         console.error("Error uploading PDF:", error)
+//       },
+//       async () => {
+//         // Get the download URL for the uploaded file
+//         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
 
-        // Send the download link to the parent via WhatsApp
-        const parentPhone = result.parentPhone || "defaultPhoneNumber" // Ensure parentPhone is fetched from Firestore
-        const message = `Here is the quiz result for ${result.name}: ${downloadURL}`
+//         // Send the download link to the parent via WhatsApp
+//         const parentPhone = result.parentPhone || "defaultPhoneNumber" // Ensure parentPhone is fetched from Firestore
+//         const message = `Here is the quiz result for ${result.name}: ${downloadURL}`
 
-        const whatsappUrl = `whatsapp://send?phone=${parentPhone}&text=${encodeURIComponent(message)}`
+//         const whatsappUrl = `whatsapp://send?phone=${parentPhone}&text=${encodeURIComponent(message)}`
 
-        // Check if WhatsApp is installed and share directly
-        if (navigator.userAgent.match(/android|iphone|ipod|ipad/i)) {
-          window.location.href = whatsappUrl // Opens WhatsApp if installed
-        } else {
-          message.error('WhatsApp is not installed on your device!')
-        }
-      }
-    )
+//         // Check if WhatsApp is installed and share directly
+//         if (navigator.userAgent.match(/android|iphone|ipod|ipad/i)) {
+//           window.location.href = whatsappUrl // Opens WhatsApp if installed
+//         } else {
+//           message.error('WhatsApp is not installed on your device!')
+//         }
+//       }
+//     )
+//   }
+
+//   const columns = [
+//     {
+//       title: "Rank",
+//       key: "rank",
+//       render: (_, __, index) => {
+//         let awardIcon
+//         let awardText = ""
+
+//         if (
+//           index === 0 ||
+//           (index > 0 &&
+//             quizResults[index].score === quizResults[0].score &&
+//             quizResults[index].percentage === quizResults[0].percentage)
+//         ) {
+//           awardIcon = <TrophyFilled style={{ color: "#FFD700" }} />
+//           awardText = "1st"
+//         } else if (
+//           index === 1 ||
+//           (index > 1 &&
+//             quizResults[index].score === quizResults[1].score &&
+//             quizResults[index].percentage === quizResults[1].percentage)
+//         ) {
+//           awardIcon = <GoldFilled style={{ color: "#C0C0C0" }} />
+//           awardText = "2nd"
+//         } else if (
+//           index === 2 ||
+//           (index > 2 &&
+//             quizResults[index].score === quizResults[2].score &&
+//             quizResults[index].percentage === quizResults[2].percentage)
+//         ) {
+//           awardIcon = <StarFilled style={{ color: "#CD7F32" }} />
+//           awardText = "3rd"
+//         }
+
+//         return (
+//           <span className="flex items-center">
+//             {awardIcon} <span className="ml-2">{awardText || index + 1}</span>
+//           </span>
+//         )
+//       }
+//     },
+//     {
+//       title: "Student Name",
+//       dataIndex: "name",
+//       key: "name",
+//       render: name => name || "Unknown"
+//     },
+//     {
+//       title: "Score",
+//       dataIndex: "score",
+//       key: "score",
+//       render: score =>
+//         `${score || 0} / ${quizDetails?.questions?.length || "Unknown"}`
+//     },
+//     {
+//       title: "Percentage",
+//       dataIndex: "percentage",
+//       key: "percentage",
+//       render: percentage => {
+//         const value = percentage || 0
+//         let color = value >= 70 ? "green" : value >= 40 ? "orange" : "red"
+//         return <Tag color={color}>{`${value.toFixed(2)}%`}</Tag>
+//       }
+//     },
+//     {
+//       title: "Submitted At",
+//       dataIndex: "submittedAt",
+//       key: "submittedAt",
+//       render: date => date?.toLocaleString() || "Unknown"
+//     },
+//     {
+//       title: "Actions",
+//       key: "actions",
+//       render: (_, record) => (
+//         <Button
+//           onClick={() => generatePDF(record)}
+//           icon={<FileTextOutlined />}
+//           type="primary"
+//           ghost
+//         >
+//           Generate PDF
+//         </Button>
+//       )
+//     }
+//   ]
+
+//   if (loading) {
+//     return (
+//       <div className="flex justify-center items-center h-screen">
+//         <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+//       </div>
+//     )
+//   }
+
+//   if (error) {
+//     return (
+//       <div className="text-center mt-8 text-red-600">
+//         <h2 className="text-2xl font-bold mb-4">Error</h2>
+//         <p>{error}</p>
+//       </div>
+//     )
+//   }
+
+//   return (
+//     <div>
+//       <Button
+//         icon={<ArrowLeftOutlined />}
+//         onClick={() => navigate("/quizzes")}
+//         className="mb-4"
+//       >
+//         Back to Quizzes
+//       </Button>
+//       <h2 className="text-center text-3xl font-bold mb-8">
+//         Results for {quizDetails?.title || "Unknown Quiz"}
+//       </h2>
+//       <Table columns={columns} dataSource={quizResults} pagination={false} />
+//     </div>
+//   )
+// }
+
+
+const generatePDF = async (result) => {
+  const pdf = new jsPDF()
+
+  // Set up styles
+  pdf.setFont("helvetica", "bold")
+  pdf.setFontSize(20)
+  pdf.setTextColor(44, 62, 80) // Dark blue color
+
+  // Title
+  pdf.text("Quiz Result Certificate", 105, 30, { align: "center" })
+
+  pdf.setFont("helvetica", "normal")
+  pdf.setFontSize(12)
+  pdf.setTextColor(52, 73, 94) // Slightly lighter blue
+
+  // Student info
+  pdf.text(`Student: ${result.name || "Unknown"}`, 20, 50)
+  pdf.text(`Quiz: ${quizDetails?.title || "Unknown Quiz"}`, 20, 60)
+  pdf.text(
+    `Score: ${result.score} / ${quizDetails?.questions?.length || "Unknown"}`,
+    20,
+    70
+  )
+  pdf.text(`Percentage: ${result.percentage?.toFixed(2) || 0}%`, 20, 80)
+  pdf.text(
+    `Submitted At: ${result.submittedAt?.toLocaleString() || "Unknown"}`,
+    20,
+    90
+  )
+
+  // Add detailed results
+  pdf.setFontSize(14)
+  pdf.setFont("helvetica", "bold")
+  pdf.text("Detailed Results:", 20, 110)
+
+  if (result.resultDetails && Array.isArray(result.resultDetails)) {
+    const tableData = result.resultDetails.map((detail, index) => [
+      index + 1,
+      detail.questionText || "Unknown Question",
+      detail.selectedAnswer || "Not answered",
+      detail.correctAnswer || "Unknown",
+      detail.isCorrect ? "Correct" : "Incorrect"
+    ])
+
+    pdf.autoTable({
+      startY: 120,
+      head: [["#", "Question", "Your Answer", "Correct Answer", "Result"]],
+      body: tableData,
+      theme: "striped",
+      headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+      alternateRowStyles: { fillColor: [235, 245, 251] }
+    })
+  } else {
+    pdf.text("No detailed results available", 20, 120)
   }
 
-  const columns = [
-    {
-      title: "Rank",
-      key: "rank",
-      render: (_, __, index) => {
-        let awardIcon
-        let awardText = ""
+  // Create Blob from PDF
+  const pdfBlob = pdf.output("blob")
 
-        if (
-          index === 0 ||
-          (index > 0 &&
-            quizResults[index].score === quizResults[0].score &&
-            quizResults[index].percentage === quizResults[0].percentage)
-        ) {
-          awardIcon = <TrophyFilled style={{ color: "#FFD700" }} />
-          awardText = "1st"
-        } else if (
-          index === 1 ||
-          (index > 1 &&
-            quizResults[index].score === quizResults[1].score &&
-            quizResults[index].percentage === quizResults[1].percentage)
-        ) {
-          awardIcon = <GoldFilled style={{ color: "#C0C0C0" }} />
-          awardText = "2nd"
-        } else if (
-          index === 2 ||
-          (index > 2 &&
-            quizResults[index].score === quizResults[2].score &&
-            quizResults[index].percentage === quizResults[2].percentage)
-        ) {
-          awardIcon = <StarFilled style={{ color: "#CD7F32" }} />
-          awardText = "3rd"
-        }
+  // Upload the Blob to Firebase Storage
+  const storage = getStorage()
+  const storageRef = ref(storage, `quiz_results/${result.name}_${result.score}.pdf`)
+  const uploadTask = uploadBytesResumable(storageRef, pdfBlob)
 
-        return (
-          <span className="flex items-center">
-            {awardIcon} <span className="ml-2">{awardText || index + 1}</span>
-          </span>
-        )
+  uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      // You can handle progress here (optional)
+    },
+    (error) => {
+      console.error("Error uploading PDF:", error)
+    },
+    async () => {
+      // Get the download URL for the uploaded file
+      const downloadURL = await getDownloadURL(uploadTask.snapshot.ref)
+
+      // Format the parent's phone number
+      let parentPhone = result.parentPhone || "03107508919"; // Default phone number
+      if (!parentPhone.startsWith("+92")) {
+        parentPhone = "+92" + parentPhone.replace(/^0/, ""); // Ensure it starts with +92 (Pakistan code)
       }
-    },
-    {
-      title: "Student Name",
-      dataIndex: "name",
-      key: "name",
-      render: name => name || "Unknown"
-    },
-    {
-      title: "Score",
-      dataIndex: "score",
-      key: "score",
-      render: score =>
-        `${score || 0} / ${quizDetails?.questions?.length || "Unknown"}`
-    },
-    {
-      title: "Percentage",
-      dataIndex: "percentage",
-      key: "percentage",
-      render: percentage => {
-        const value = percentage || 0
-        let color = value >= 70 ? "green" : value >= 40 ? "orange" : "red"
-        return <Tag color={color}>{`${value.toFixed(2)}%`}</Tag>
+
+      // WhatsApp URL to send the message with download link
+      const message = `Here is the quiz result for ${result.name}: ${downloadURL}`
+
+      const whatsappUrl = `whatsapp://send?phone=${parentPhone}&text=${encodeURIComponent(message)}`
+
+      // Check if WhatsApp is installed and share directly
+      if (navigator.userAgent.match(/android|iphone|ipod|ipad/i)) {
+        window.location.href = whatsappUrl // Opens WhatsApp if installed
+      } else {
+        message.error('WhatsApp is not installed on your device!')
       }
-    },
-    {
-      title: "Submitted At",
-      dataIndex: "submittedAt",
-      key: "submittedAt",
-      render: date => date?.toLocaleString() || "Unknown"
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_, record) => (
-        <Button
-          onClick={() => generatePDF(record)}
-          icon={<FileTextOutlined />}
-          type="primary"
-          ghost
-        >
-          Generate PDF
-        </Button>
-      )
     }
-  ]
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="text-center mt-8 text-red-600">
-        <h2 className="text-2xl font-bold mb-4">Error</h2>
-        <p>{error}</p>
-      </div>
-    )
-  }
-
-  return (
-    <div>
-      <Button
-        icon={<ArrowLeftOutlined />}
-        onClick={() => navigate("/quizzes")}
-        className="mb-4"
-      >
-        Back to Quizzes
-      </Button>
-      <h2 className="text-center text-3xl font-bold mb-8">
-        Results for {quizDetails?.title || "Unknown Quiz"}
-      </h2>
-      <Table columns={columns} dataSource={quizResults} pagination={false} />
-    </div>
   )
 }
