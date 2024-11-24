@@ -230,6 +230,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { Spin } from 'antd'; // Import Spin from Ant Design
+import { LoadingOutlined } from '@ant-design/icons';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -281,9 +282,12 @@ function App() {
   // Show loading spinner while fetching data
   if (loading) {
     return (
-      <div className="loading-container">
-        <Spin tip="Loading..." />
-      </div>
+      <div className="centered-container">
+      <Spin indicator={<LoadingOutlined spin />} />
+    </div>
+      // <div className="loading-container">
+      //   <Spin tip="Loading..." />
+      // </div>
     );
   }
 

@@ -1,4 +1,3 @@
-
 // import React, { useState } from 'react';
 // import { useNavigate, Link } from 'react-router-dom';
 // import { createUserWithEmailAndPassword, sendEmailVerification, getAuth, fetchSignInMethodsForEmail } from 'firebase/auth';
@@ -203,12 +202,6 @@
 //     </div>
 //   );
 // }
-
-
-
-
-
-
 
 // import React, { useState } from 'react';
 // import { useNavigate, Link } from 'react-router-dom';
@@ -445,10 +438,6 @@
 //     </div>
 //   );
 // }
-
-
-
-
 
 // import React, { useState } from 'react';
 // import { useNavigate, Link } from 'react-router-dom';
@@ -710,38 +699,51 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { createUserWithEmailAndPassword, sendEmailVerification, getAuth, fetchSignInMethodsForEmail } from 'firebase/auth';
-import { auth, db } from '../firebase/firebase';
-import { doc, setDoc, query, where, getDocs, collection } from 'firebase/firestore';
-import Swal from 'sweetalert2'; // Import SweetAlert2
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  getAuth,
+  fetchSignInMethodsForEmail,
+} from "firebase/auth";
+import { auth, db } from "../firebase/firebase";
+import {
+  doc,
+  setDoc,
+  query,
+  where,
+  getDocs,
+  collection,
+} from "firebase/firestore";
+import Swal from "sweetalert2"; // Import SweetAlert2
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
 // Define Zod validation schema
 const schema = z.object({
-  name: z.string().min(3, { message: 'Name must be at least 3 characters long' }).trim(),
-  email: z.string().email({ message: 'Invalid email address' }),
-  password: z.string().min(8, { message: 'Password must be at least 8 characters long' }),
-  school: z.string().min(3, { message: 'School name is required' }).trim(),
-  className: z.string().min(1, { message: 'Class is required' }).trim(),
-  teacherEmail: z.string().email({ message: 'Invalid teacher email' }),
-  phone: z.string().length(11, { message: 'Phone number must be exactly 11 digits' }).regex(/^\d{11}$/, { message: 'Phone number must be exactly 11 digits' }),
-  parentPhone: z.string().length(11, { message: 'Parent phone number must be exactly 11 digits' }).regex(/^\d{11}$/, { message: 'Parent phone number must be exactly 11 digits' }),
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters long" })
+    .trim(),
+  email: z.string().email({ message: "Invalid email address" }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long" }),
+  school: z.string().min(3, { message: "School name is required" }).trim(),
+  className: z.string().min(1, { message: "Class is required" }).trim(),
+  teacherEmail: z.string().email({ message: "Invalid teacher email" }),
+  phone: z
+    .string()
+    .length(11, { message: "Phone number must be exactly 11 digits" })
+    .regex(/^\d{11}$/, { message: "Phone number must be exactly 11 digits" }),
+  parentPhone: z
+    .string()
+    .length(11, { message: "Parent phone number must be exactly 11 digits" })
+    .regex(/^\d{11}$/, {
+      message: "Parent phone number must be exactly 11 digits",
+    }),
 });
 
 export default function Signup() {
@@ -749,48 +751,73 @@ export default function Signup() {
   const navigate = useNavigate();
 
   // React Hook Form
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(schema),
   });
 
   const handleSignup = async (data) => {
     setLoading(true);
-    const { name, email, password, school, className, teacherEmail, phone, parentPhone } = data;
+    const {
+      name,
+      email,
+      password,
+      school,
+      className,
+      teacherEmail,
+      phone,
+      parentPhone,
+    } = data;
 
     try {
       // Check if the user already exists in Firebase Authentication
       const signInMethods = await fetchSignInMethodsForEmail(getAuth(), email);
       if (signInMethods.length > 0) {
-        Swal.fire('Error', 'This email is already in use. Please log in or use another email.', 'error');
+        Swal.fire(
+          "Error",
+          "This email is already in use. Please log in or use another email.",
+          "error"
+        );
         setLoading(false);
         return;
       }
 
       // Check if teacher exists by querying the 'users' collection for the teacher's email
       const teacherQuerySnapshot = await getDocs(
-        query(collection(db, 'users'), where('email', '==', teacherEmail), where('role', '==', 'teacher'))
+        query(
+          collection(db, "users"),
+          where("email", "==", teacherEmail),
+          where("role", "==", "teacher")
+        )
       );
 
       if (teacherQuerySnapshot.empty) {
-        Swal.fire('Error', 'Your teacher email is incorrect.', 'error');
+        Swal.fire("Error", "Your teacher email is incorrect.", "error");
         setLoading(false);
         return;
       }
 
       // Proceed to create the user
-      const userCredential = await createUserWithEmailAndPassword(getAuth(), email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        getAuth(),
+        email,
+        password
+      );
       const user = userCredential.user;
 
       // Send email verification to the user
       await sendEmailVerification(user);
 
       // Create the user document in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
+      await setDoc(doc(db, "users", user.uid), {
         name,
         uid: user.uid,
         email,
         password,
-        role: 'student',
+        role: "student",
         school,
         class: className,
         teacherEmail,
@@ -800,19 +827,34 @@ export default function Signup() {
       });
 
       // Redirect to the login page after successful signup
-      navigate('/login');
+      navigate("/login");
 
       // Show success alert
-      Swal.fire('Success', 'Please check your email to verify your account.', 'success');
-
+      Swal.fire(
+        "Success",
+        "Please check your email to verify your account.",
+        "success"
+      );
     } catch (error) {
       // Handle various error scenarios with specific messages
-      if (error.code === 'auth/invalid-email') {
-        Swal.fire('Error', 'The email address is invalid. Please check and try again.', 'error');
-      } else if (error.code === 'auth/weak-password') {
-        Swal.fire('Error', 'Password is too weak. Please provide a stronger password.', 'error');
+      if (error.code === "auth/invalid-email") {
+        Swal.fire(
+          "Error",
+          "The email address is invalid. Please check and try again.",
+          "error"
+        );
+      } else if (error.code === "auth/weak-password") {
+        Swal.fire(
+          "Error",
+          "Password is too weak. Please provide a stronger password.",
+          "error"
+        );
       } else {
-        Swal.fire('Error', 'Failed to create an account. Please try again later.', 'error');
+        Swal.fire(
+          "Error",
+          "Failed to create an account. Please try again later.",
+          "error"
+        );
       }
       console.error(error);
     } finally {
@@ -824,108 +866,142 @@ export default function Signup() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
         <div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">Create your student account</h2>
+          <h2 className="text-center text-3xl font-extrabold text-gray-900">
+            Create your student account
+          </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(handleSignup)}>
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="name" className="sr-only">Name</label>
+              <label htmlFor="name" className="sr-only">
+                Name
+              </label>
               <input
                 id="name"
                 name="name"
                 type="text"
-                {...register('name')}
+                {...register("name")}
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Full Name"
               />
-              {errors.name && <p className="text-red-600">{errors.name.message}</p>}
+              {errors.name && (
+                <p className="text-red-600">{errors.name.message}</p>
+              )}
             </div>
             <div>
-              <label htmlFor="email-address" className="sr-only">Email address</label>
+              <label htmlFor="email-address" className="sr-only">
+                Email address
+              </label>
               <input
                 id="email-address"
                 name="email"
                 type="email"
                 autoComplete="email"
-                {...register('email')}
+                {...register("email")}
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
-              {errors.email && <p className="text-red-600">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="text-red-600">{errors.email.message}</p>
+              )}
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">Password</label>
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
               <input
                 id="password"
                 name="password"
                 type="password"
                 autoComplete="new-password"
-                {...register('password')}
+                {...register("password")}
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
-              {errors.password && <p className="text-red-600">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="text-red-600">{errors.password.message}</p>
+              )}
             </div>
             <div>
-              <label htmlFor="school" className="sr-only">School</label>
+              <label htmlFor="school" className="sr-only">
+                School
+              </label>
               <input
                 id="school"
                 name="school"
                 type="text"
-                {...register('school')}
+                {...register("school")}
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="School Name"
               />
-              {errors.school && <p className="text-red-600">{errors.school.message}</p>}
+              {errors.school && (
+                <p className="text-red-600">{errors.school.message}</p>
+              )}
             </div>
             <div>
-              <label htmlFor="class" className="sr-only">Class</label>
+              <label htmlFor="class" className="sr-only">
+                Class
+              </label>
               <input
                 id="class"
                 name="class"
                 type="text"
-                {...register('className')}
+                {...register("className")}
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Class"
               />
-              {errors.className && <p className="text-red-600">{errors.className.message}</p>}
+              {errors.className && (
+                <p className="text-red-600">{errors.className.message}</p>
+              )}
             </div>
             <div>
-              <label htmlFor="teacher-email" className="sr-only">Teacher Email</label>
+              <label htmlFor="teacher-email" className="sr-only">
+                Teacher Email
+              </label>
               <input
                 id="teacher-email"
                 name="teacherEmail"
                 type="email"
-                {...register('teacherEmail')}
+                {...register("teacherEmail")}
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Teacher's Email"
               />
-              {errors.teacherEmail && <p className="text-red-600">{errors.teacherEmail.message}</p>}
+              {errors.teacherEmail && (
+                <p className="text-red-600">{errors.teacherEmail.message}</p>
+              )}
             </div>
             <div>
-              <label htmlFor="phone" className="sr-only">Phone Number</label>
+              <label htmlFor="phone" className="sr-only">
+                Phone Number
+              </label>
               <input
                 id="phone"
                 name="phone"
                 type="tel"
-                {...register('phone')}
+                {...register("phone")}
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Phone Number"
               />
-              {errors.phone && <p className="text-red-600">{errors.phone.message}</p>}
+              {errors.phone && (
+                <p className="text-red-600">{errors.phone.message}</p>
+              )}
             </div>
             <div>
-              <label htmlFor="parent-phone" className="sr-only">Parent's Phone Number</label>
+              <label htmlFor="parent-phone" className="sr-only">
+                Parent's Phone Number
+              </label>
               <input
                 id="parent-phone"
                 name="parentPhone"
                 type="tel"
-                {...register('parentPhone')}
+                {...register("parentPhone")}
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Parent's Phone Number"
               />
-              {errors.parentPhone && <p className="text-red-600">{errors.parentPhone.message}</p>}
+              {errors.parentPhone && (
+                <p className="text-red-600">{errors.parentPhone.message}</p>
+              )}
             </div>
           </div>
 
@@ -933,21 +1009,27 @@ export default function Signup() {
             <button
               type="submit"
               disabled={loading}
-              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
+                loading ? "bg-gray-400" : "bg-indigo-600 hover:bg-indigo-700"
+              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
             >
               {loading ? (
                 <div className="flex items-center space-x-2">
-                  <div className="animate-spin inline-block w-6 h-6 border-4 border-t-4 border-white rounded-full"></div>
-                  <span>Creating...</span>
+                  <div className="centered-container">
+                    <Spin indicator={<LoadingOutlined spin />} />
+                  </div>
                 </div>
               ) : (
-                'Sign up'
+                "Sign up"
               )}
             </button>
           </div>
         </form>
         <div className="text-sm text-center">
-          <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <Link
+            to="/login"
+            className="font-medium text-indigo-600 hover:text-indigo-500"
+          >
             Already have an account? Log in
           </Link>
         </div>

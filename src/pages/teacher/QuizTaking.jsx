@@ -399,7 +399,7 @@ import {
   addDoc
 } from "firebase/firestore"
 import { Button, Progress, Radio, Space } from "antd"
-import { ClockCircleOutlined, CheckCircleOutlined } from "@ant-design/icons"
+import { ClockCircleOutlined, CheckCircleOutlined,LoadingOutlined } from "@ant-design/icons"
 
 export default function QuizTaking() {
   const { quizId } = useParams()
@@ -629,8 +629,8 @@ export default function QuizTaking() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen">
-        <span className="loading loading-spinner loading-lg"></span>
+      <div className="centered-container">
+        <Spin indicator={<LoadingOutlined spin />} />
       </div>
     )
   if (error)

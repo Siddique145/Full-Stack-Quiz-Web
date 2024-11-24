@@ -1,0 +1,156 @@
+/* General styling for the signup page */
+.signup-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f7f7f7;
+}
+
+.signup-container {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+input,
+button {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input:focus,
+button:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+input {
+  background-color: #f9f9f9;
+}
+
+input::placeholder {
+  color: #999;
+}
+
+button {
+  background-color: #3498db;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+label {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.text-primary:hover {
+  text-decoration: underline;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+.space-y-6 > * + * {
+  margin-top: 1.5rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+  padding: 12px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
+/* Error styling */
+.text-red-600 {
+  color: #e53e3e;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .signup-container {
+    padding: 20px;
+    width: 90%;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .signup-container {
+    width: 100%;
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+}

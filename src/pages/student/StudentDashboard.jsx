@@ -20,6 +20,7 @@ import {
   Tabs,
   Table,
 } from "antd";
+import Swal from 'sweetalert2'; // Import SweetAlert2
 import {
   UserOutlined,
   LogoutOutlined,
@@ -134,9 +135,27 @@ export default function StudentDashboard() {
   };
 
   const handleLogout = () => {
-    auth.signOut();
-    navigate("/login");
+    Swal.fire({
+      title: 'Confirm Logout',
+      text: 'Are you sure you want to log out?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, log out!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        auth.signOut();
+        navigate('/login'); // Redirect to login page after logging out
+        Swal.fire('Logged out!', 'You have been logged out successfully.', 'success');
+      }
+    });
   };
+  // const handleLogout = () => {
+  //   auth.signOut();
+  //   navigate("/login");
+  // };
 
   const handleProfileClick = () => {
     setIsProfileModalVisible(true);
@@ -301,6 +320,7 @@ export default function StudentDashboard() {
   ];
 
   return (
+    
     <Spin spinning={loading} tip="Loading...">
       <Layout className="min-h-screen">
         <Header className="px-4 bg-gradient-to-r text-white bg-indigo-600 hover:bg-indigo-700">
