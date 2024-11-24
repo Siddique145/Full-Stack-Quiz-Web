@@ -1648,7 +1648,7 @@ export default function TeacherDashboard() {
   );
 
   return (
-    <Layout className="min-h-screen">
+    <Layout className="min-h-screen bg-black">
       <Header className="px-4 bg-gradient-to-r text-white bg-indigo-600 hover:bg-indigo-700">
         <Row justify="space-between" align="middle">
           <Col>
