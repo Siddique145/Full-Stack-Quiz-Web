@@ -9,6 +9,7 @@ const ContactUs = () => {
   });
 
   const [status, setStatus] = useState("");
+  const [isSending, setIsSending] = useState(false); // Button loading state
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,35 +17,53 @@ const ContactUs = () => {
 
   const sendEmail = (e) => {
     e.preventDefault();
+    setIsSending(true);
+    setStatus("Sending...");
+
+    // Prepare template parameters
+    const templateParams = {
+      to_name: "Admin",
+      from_name: formData.name,
+      from_email: formData.email, // ✅ Correct email field
+      message: formData.message,
+    };
+
+    console.log("Sending email with params:", templateParams); // Debugging log
 
     emailjs
-      .sendForm(
-        "service_dae5m6d", // Replace with your EmailJS Service ID
-        "template_xw0mdan", // Replace with your EmailJS Template ID
-        e.target,
-        "0g4UYVz92ah8TDcSf" // Replace with your EmailJS Public Key
+      .send(
+        "service_dae5m6d", // Replace with your actual service ID
+        "template_xw0mdan", // Replace with your template ID
+        templateParams,
+        "0g4UYVz92ah8TDcSf" // Replace with your user ID
       )
       .then(
         (response) => {
           console.log("Email sent successfully!", response);
           setStatus("Message sent successfully!");
-          setFormData({ name: "", email: "", message: "" }); // Clear form
+          setFormData({ name: "", email: "", message: "" }); // Reset form
         },
         (error) => {
           console.error("Failed to send email.", error);
           setStatus("Failed to send message. Try again.");
         }
-      );
+      )
+      .finally(() => setIsSending(false)); // Reset loading state
   };
 
   return (
     <section id="contact" className="py-20 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-purple-800 mb-8">Contact Us</h2>
+        <h2 className="text-3xl font-bold text-center text-purple-800 mb-8">
+          Contact Us
+        </h2>
         <div className="max-w-2xl mx-auto bg-purple-100 p-6 rounded-lg shadow-md">
           <form className="space-y-4" onSubmit={sendEmail}>
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-purple-700">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-purple-700"
+              >
                 Name
               </label>
               <input
@@ -58,7 +77,10 @@ const ContactUs = () => {
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-purple-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-purple-700"
+              >
                 Email
               </label>
               <input
@@ -72,7 +94,10 @@ const ContactUs = () => {
               />
             </div>
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-purple-700">
+              <label
+                htmlFor="message"
+                className="block text-sm font-medium text-purple-700"
+              >
                 Message
               </label>
               <textarea
@@ -89,12 +114,15 @@ const ContactUs = () => {
               <button
                 type="submit"
                 className="w-full bg-purple-800 text-white py-2 px-4 rounded-md hover:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-50 transition"
+                disabled={isSending}
               >
-                Send Message
+                {isSending ? "Sending..." : "Send Message"}
               </button>
             </div>
           </form>
-          {status && <p className="text-center text-purple-800 mt-4">{status}</p>}
+          {status && (
+            <p className="text-center text-purple-800 mt-4">{status}</p>
+          )}
         </div>
       </div>
     </section>

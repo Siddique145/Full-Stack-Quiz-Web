@@ -893,7 +893,7 @@ export default function Signup() {
               <label htmlFor="email-address" className="sr-only">
                 Email address
               </label>
-              input
+              <input
                 id="email-address"
                 name="email"
                 type="email"
@@ -901,7 +901,7 @@ export default function Signup() {
                 {...register("email")}
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
-              /
+              />
               {errors.email && (
                 <p className="text-red-600">{errors.email.message}</p>
               )}
