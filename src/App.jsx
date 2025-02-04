@@ -242,6 +242,7 @@ import QuizTaking from './pages/teacher/QuizTaking';
 import QuizResults from './pages/teacher/QuizResults';
 import NotFound from './pages/Notfound';
 import { Analytics } from "@vercel/analytics/react"; // Vercel Analytics
+import MainHome from './pages/homepage/MainHomepage';
 
 const PrivateRoute = ({ element, allowedRoles }) => {
   const { currentUser, userData } = useAuth();
@@ -298,6 +299,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/home" element={<MainHome/>} />
           
           {/* Protected Routes with Role-based Access */}
           <Route
@@ -325,7 +327,7 @@ function App() {
             element={<PrivateRoute element={<QuizResults />} allowedRoles={['admin', 'teacher']} />}
           />
           
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/" element={<Navigate to="/home" />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

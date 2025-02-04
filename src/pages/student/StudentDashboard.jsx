@@ -32,10 +32,15 @@ import {
 } from "@ant-design/icons";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable"; // For creating tables in PDFs
+import Hero from "../homepage/Hero";
+import Footer from "../homepage/Footer";
+import TopHeader from "../homepage/TopHeader";
+
+
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
-const { Header, Content } = Layout;
+const {  Header, Content } = Layout;
 
 export default function StudentDashboard() {
   const [quizzes, setQuizzes] = useState([]);
@@ -179,7 +184,7 @@ export default function StudentDashboard() {
 
     // Title
     doc.setFontSize(18);
-    doc.setTextColor(0, 0, 255); // Blue color for the quiz title
+    doc.setTextColor(0, 0, 255); // purple color for the quiz title
     doc.text(`Quiz Title: ${quizTitle}`, 14, 20);
 
     // Score
@@ -216,7 +221,7 @@ export default function StudentDashboard() {
       body: [],
       theme: "grid",
       styles: {
-        fillColor: [0, 123, 255], // Blue color for header row
+        fillColor: [0, 123, 255], // purple color for header row
         textColor: [255, 255, 255], // White text color
         fontSize: 10,
         halign: "center", // Align the headers to the center
@@ -323,12 +328,13 @@ export default function StudentDashboard() {
     
     <Spin spinning={loading} tip="Loading...">
       <Layout className="min-h-screen">
-        <Header className="px-4 bg-gradient-to-r text-white bg-indigo-600 hover:bg-indigo-700">
+       
+        <Header className="px-4 bg-gradient-to-r text-white bg-purple-600 hover:bg-purple-700">
           <Row justify="space-between" align="middle">
             <Col>
               <div className="flex items-center">
                 <Avatar
-                  className="mr-2 bg-white text-blue-600 cursor-pointer"
+                  className="mr-2 bg-white text-purple-600 cursor-pointer"
                   onClick={handleProfileClick}
                 >
                   {studentAvatar}
@@ -347,12 +353,12 @@ export default function StudentDashboard() {
                 type="primary"
                 icon={<LogoutOutlined />}
                 onClick={handleLogout}
-                className="bg-white text-indigo-600 border-white hover:bg-indigo-100 hover:border-indigo-100"
+                className="bg-white text-purple-600 border-white hover:bg-purple-100 hover:border-100"
               />
             </Col>
           </Row>
         </Header>
-
+        <TopHeader/>
         <Layout>
           <Content className="p-6 bg-white rounded-lg shadow-md">
             {/* <Spin spinning={loading}> */}
@@ -363,7 +369,7 @@ export default function StudentDashboard() {
                     <Statistic
                       title="Available Quizzes"
                       value={quizzes.length}
-                      className="bg-blue-50 p-4 rounded-lg"
+                      className="bg-purple-50 p-4 rounded-lg"
                     />
                   </Col>
                   <Col xs={24} sm={12} md={8} lg={6}>
@@ -414,7 +420,7 @@ export default function StudentDashboard() {
                                 type="primary"
                                 onClick={() => handleAccessCodeSubmit(quiz.id)}
                                 disabled={isQuizAttempted(quiz.id)}
-                                className="mt-2 w-full"
+                                className="mt-2 w-full  bg-purple-600"
                                 block
                               >
                                 {isQuizAttempted(quiz.id)
@@ -441,6 +447,7 @@ export default function StudentDashboard() {
               </TabPane>
             </Tabs>
             {/* </Spin> */}
+            <Footer/>
           </Content>
         </Layout>
 

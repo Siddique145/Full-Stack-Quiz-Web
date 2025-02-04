@@ -315,7 +315,7 @@
 //         <div className="mt-6 text-center">
 //           <button
 //             onClick={handleGoBack}
-//             className="px-6 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition duration-150 ease-in-out"
+//             className="px-6 py-2 rounded bg-purple-600 text-white hover:bg-purple-700 transition duration-150 ease-in-out"
 //           >
 //             Go Back to Quiz
 //           </button>
@@ -343,7 +343,7 @@
 //               onClick={() => handleAnswer(index)}
 //               disabled={isAnswered}
 //               className={`w-full text-left p-2 rounded ${
-//                 isAnswered ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+//                 isAnswered ? "bg-gray-400" : "bg-purple-500 hover:bg-purple-600"
 //               } text-white`}
 //             >
 //               {option}
@@ -657,7 +657,7 @@ export default function QuizTaking() {
   return (
     <div className="container mx-auto px-4 py-8 bg-gray-100 min-h-screen">
       <div className="bg-white shadow-lg rounded-lg p-6 max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">
+        <h1 className="text-3xl font-bold mb-6 text-center text-purple-600">
           {quiz.title}
         </h1>
         <div className="mb-4 flex justify-between items-center">
@@ -665,8 +665,8 @@ export default function QuizTaking() {
             Question {currentQuestion + 1} of {quiz.questions.length}
           </span>
           <div className="flex items-center">
-            <ClockCircleOutlined className="mr-2 text-blue-500" />
-            <span className="text-lg font-semibold text-blue-500">
+            <ClockCircleOutlined className="mr-2 text-purple-500" />
+            <span className="text-lg font-semibold text-purple-500">
               {timeLeft}s
             </span>
           </div>
@@ -693,7 +693,7 @@ export default function QuizTaking() {
               <Radio
                 key={index}
                 value={index}
-                className="w-full p-3 my-2 border border-gray-300 rounded-lg hover:bg-blue-50 transition duration-300"
+                className="w-full p-3 my-2 border border-gray-300 rounded-lg hover:bg-purple-50 transition duration-300"
               >
                 {option}
               </Radio>

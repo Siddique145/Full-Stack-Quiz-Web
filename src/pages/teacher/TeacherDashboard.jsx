@@ -253,13 +253,13 @@ export default function TeacherDashboard() {
 
   return (
     <Layout className="min-h-screen bg-black">
-      <Header className="px-4 bg-gradient-to-r text-white bg-indigo-600 hover:bg-indigo-700">
+      <Header className="px-4 bg-gradient-to-r text-white bg-purple-600 hover:bg-purple-700">
         <Row justify="space-between" align="middle">
           <Col>
             <div className="flex items-center">
               {/* Avatar with first letter of teacher's name */}
               <Avatar
-                className="mr-2 bg-white text-blue-600"
+                className="mr-2 bg-white text-purple-600"
                 onClick={() => setIsTeacherModalVisible(true)}
               >
                 {teacherAvatar}
@@ -278,7 +278,7 @@ export default function TeacherDashboard() {
               type="primary"
               icon={<LogoutOutlined />}
               onClick={handleLogout}
-              className="bg-white text-blue-600 border-white hover:bg-blue-100 hover:border-blue-100"
+              className="bg-white text-purple-600 border-white hover:bg-purple-100 hover:border-purple-100"
             ></Button>
           </Col>
         </Row>
@@ -295,7 +295,7 @@ export default function TeacherDashboard() {
                     <Statistic
                       title="Total Quizzes"
                       value={quizzes.length}
-                      className="bg-blue-50 p-4 rounded-lg"
+                      className="bg-purple-50 p-4 rounded-lg"
                     />
                   </Col>
                 </Row>
@@ -433,7 +433,7 @@ export default function TeacherDashboard() {
                           avatar={
                             <Avatar
                               icon={<UserOutlined />}
-                              className="bg-blue-100 text-blue-600"
+                              className="bg-purple-100 text-purple-600"
                             />
                           }
                           title={
@@ -502,7 +502,7 @@ export default function TeacherDashboard() {
                     <List.Item>
                       <Card hoverable className="shadow-sm transition-all duration-300 hover:shadow-lg">
                         <Meta
-                          avatar={<Avatar icon={<UserOutlined />} className="bg-blue-100 text-blue-600" />}
+                          avatar={<Avatar icon={<UserOutlined />} className="bg-purple-100 text-purple-600" />}
                           title={<span className="text-lg font-semibold">{student.name}</span>}
                           description={
                             <>
@@ -534,7 +534,7 @@ export default function TeacherDashboard() {
             icon={<PlusOutlined />}
             shape="circle"
             size="large"
-            className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 shadow-lg"
+            className="fixed bottom-6 right-6 bg-purple-600 hover:bg-purple-700 shadow-lg"
             onClick={() => navigate("/create-quiz")}
           />
         </Content>
@@ -611,7 +611,7 @@ export default function TeacherDashboard() {
               <Button
                 type="primary"
                 htmlType="submit"
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-purple-600 hover:bg-purple-700"
               >
                 Save Changes
               </Button>

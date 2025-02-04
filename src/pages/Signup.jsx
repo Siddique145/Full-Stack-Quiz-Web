@@ -99,7 +99,7 @@
 //                 name="name"
 //                 type="text"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Full Name"
 //                 value={name}
 //                 onChange={(e) => setName(e.target.value)}
@@ -113,7 +113,7 @@
 //                 type="email"
 //                 autoComplete="email"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Email address"
 //                 value={email}
 //                 onChange={(e) => setEmail(e.target.value)}
@@ -127,7 +127,7 @@
 //                 type="password"
 //                 autoComplete="new-password"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Password"
 //                 value={password}
 //                 onChange={(e) => setPassword(e.target.value)}
@@ -140,7 +140,7 @@
 //                 name="school"
 //                 type="text"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="School Name"
 //                 value={school}
 //                 onChange={(e) => setSchool(e.target.value)}
@@ -153,7 +153,7 @@
 //                 name="class"
 //                 type="text"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Class"
 //                 value={className}
 //                 onChange={(e) => setClassName(e.target.value)}
@@ -166,7 +166,7 @@
 //                 name="teacher-email"
 //                 type="email"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Teacher's Email"
 //                 value={teacherEmail}
 //                 onChange={(e) => setTeacherEmail(e.target.value)}
@@ -180,7 +180,7 @@
 //             <button
 //               type="submit"
 //               disabled={loading}
-//               className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+//               className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-purple-600 hover:bg-purple-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
 //             >
 //               {loading ? (
 //                 <div className="flex items-center space-x-2">
@@ -194,7 +194,7 @@
 //           </div>
 //         </form>
 //         <div className="text-sm text-center">
-//           <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+//           <Link to="/login" className="font-medium text-purple-600 hover:text-purple-500">
 //             Already have an account? Log in
 //           </Link>
 //         </div>
@@ -308,7 +308,7 @@
 //                 name="name"
 //                 type="text"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Full Name"
 //                 value={name}
 //                 onChange={(e) => setName(e.target.value)}
@@ -322,7 +322,7 @@
 //                 type="email"
 //                 autoComplete="email"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Email address"
 //                 value={email}
 //                 onChange={(e) => setEmail(e.target.value)}
@@ -336,7 +336,7 @@
 //                 type="password"
 //                 autoComplete="new-password"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Password"
 //                 value={password}
 //                 onChange={(e) => setPassword(e.target.value)}
@@ -349,7 +349,7 @@
 //                 name="school"
 //                 type="text"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="School Name"
 //                 value={school}
 //                 onChange={(e) => setSchool(e.target.value)}
@@ -362,7 +362,7 @@
 //                 name="class"
 //                 type="text"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Class"
 //                 value={className}
 //                 onChange={(e) => setClassName(e.target.value)}
@@ -375,7 +375,7 @@
 //                 name="teacher-email"
 //                 type="email"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Teacher's Email"
 //                 value={teacherEmail}
 //                 onChange={(e) => setTeacherEmail(e.target.value)}
@@ -389,7 +389,7 @@
 //                 name="phone"
 //                 type="tel"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Phone Number"
 //                 value={phone}
 //                 onChange={(e) => setPhone(e.target.value)}
@@ -402,7 +402,7 @@
 //                 name="parent-phone"
 //                 type="tel"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Parent's Phone Number"
 //                 value={parentPhone}
 //                 onChange={(e) => setParentPhone(e.target.value)}
@@ -416,7 +416,7 @@
 //             <button
 //               type="submit"
 //               disabled={loading}
-//               className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+//               className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-purple-600 hover:bg-purple-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
 //             >
 //               {loading ? (
 //                 <div className="flex items-center space-x-2">
@@ -430,7 +430,7 @@
 //           </div>
 //         </form>
 //         <div className="text-sm text-center">
-//           <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+//           <Link to="/login" className="font-medium text-purple-600 hover:text-purple-500">
 //             Already have an account? Log in
 //           </Link>
 //         </div>
@@ -568,7 +568,7 @@
 //                 name="name"
 //                 type="text"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Full Name"
 //                 value={name}
 //                 onChange={(e) => setName(e.target.value)}
@@ -582,7 +582,7 @@
 //                 type="email"
 //                 autoComplete="email"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Email address"
 //                 value={email}
 //                 onChange={(e) => setEmail(e.target.value)}
@@ -596,7 +596,7 @@
 //                 type="password"
 //                 autoComplete="new-password"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Password"
 //                 value={password}
 //                 onChange={(e) => setPassword(e.target.value)}
@@ -609,7 +609,7 @@
 //                 name="school"
 //                 type="text"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="School Name"
 //                 value={school}
 //                 onChange={(e) => setSchool(e.target.value)}
@@ -622,7 +622,7 @@
 //                 name="class"
 //                 type="text"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Class"
 //                 value={className}
 //                 onChange={(e) => setClassName(e.target.value)}
@@ -635,7 +635,7 @@
 //                 name="teacher-email"
 //                 type="email"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Teacher's Email"
 //                 value={teacherEmail}
 //                 onChange={(e) => setTeacherEmail(e.target.value)}
@@ -649,7 +649,7 @@
 //                 name="phone"
 //                 type="tel"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Phone Number"
 //                 value={phone}
 //                 onChange={(e) => setPhone(e.target.value)}
@@ -662,7 +662,7 @@
 //                 name="parent-phone"
 //                 type="tel"
 //                 required
-//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+//                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
 //                 placeholder="Parent's Phone Number"
 //                 value={parentPhone}
 //                 onChange={(e) => setParentPhone(e.target.value)}
@@ -676,7 +676,7 @@
 //             <button
 //               type="submit"
 //               disabled={loading}
-//               className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+//               className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${loading ? 'bg-gray-400' : 'bg-purple-600 hover:bg-purple-700'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
 //             >
 //               {loading ? (
 //                 <div className="flex items-center space-x-2">
@@ -690,7 +690,7 @@
 //           </div>
 //         </form>
 //         <div className="text-sm text-center">
-//           <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+//           <Link to="/login" className="font-medium text-purple-600 hover:text-purple-500">
 //             Already have an account? Log in
 //           </Link>
 //         </div>
@@ -863,7 +863,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 via-purple-500 to-pink-500 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
         <div>
           <h2 className="text-center text-3xl font-extrabold text-gray-900">
@@ -882,7 +882,7 @@ export default function Signup() {
                 name="name"
                 type="text"
                 {...register("name")}
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                 placeholder="Full Name"
               />
               {errors.name && (
@@ -893,15 +893,15 @@ export default function Signup() {
               <label htmlFor="email-address" className="sr-only">
                 Email address
               </label>
-              <input
+              input
                 id="email-address"
                 name="email"
                 type="email"
                 autoComplete="email"
                 {...register("email")}
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
-              />
+              /
               {errors.email && (
                 <p className="text-red-600">{errors.email.message}</p>
               )}
@@ -916,7 +916,7 @@ export default function Signup() {
                 type="password"
                 autoComplete="new-password"
                 {...register("password")}
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
               {errors.password && (
@@ -932,7 +932,7 @@ export default function Signup() {
                 name="school"
                 type="text"
                 {...register("school")}
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                 placeholder="School Name"
               />
               {errors.school && (
@@ -948,7 +948,7 @@ export default function Signup() {
                 name="class"
                 type="text"
                 {...register("className")}
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                 placeholder="Class"
               />
               {errors.className && (
@@ -964,7 +964,7 @@ export default function Signup() {
                 name="teacherEmail"
                 type="email"
                 {...register("teacherEmail")}
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                 placeholder="Teacher's Email"
               />
               {errors.teacherEmail && (
@@ -980,7 +980,7 @@ export default function Signup() {
                 name="phone"
                 type="tel"
                 {...register("phone")}
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                 placeholder="Phone Number"
               />
               {errors.phone && (
@@ -996,7 +996,7 @@ export default function Signup() {
                 name="parentPhone"
                 type="tel"
                 {...register("parentPhone")}
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                 placeholder="Parent's Phone Number"
               />
               {errors.parentPhone && (
@@ -1010,8 +1010,8 @@ export default function Signup() {
               type="submit"
               disabled={loading}
               className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
-                loading ? "bg-gray-400" : "bg-indigo-600 hover:bg-indigo-700"
-              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                loading ? "bg-gray-400" : "bg-purple-600 hover:bg-purple-700"
+              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500`}
             >
               {loading ? (
                 <div className="flex items-center space-x-2">
@@ -1028,7 +1028,7 @@ export default function Signup() {
         <div className="text-sm text-center">
           <Link
             to="/login"
-            className="font-medium text-indigo-600 hover:text-indigo-500"
+            className="font-medium text-purple-600 hover:text-purple-500"
           >
             Already have an account? Log in
           </Link>
