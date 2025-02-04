@@ -447,8 +447,8 @@ export default function StudentDashboard() {
               </TabPane>
             </Tabs>
             {/* </Spin> */}
-            <Footer/>
           </Content>
+            <Footer/>
         </Layout>
 
         <Modal
