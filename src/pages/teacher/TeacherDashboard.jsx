@@ -1484,6 +1484,7 @@ import { collection, query, where, getDocs, doc, updateDoc, deleteDoc } from 'fi
 import { Layout, Button, Card, Avatar, Input, Modal, Form, InputNumber, List, Typography, message, Row, Col, Spin, Statistic, Tabs } from 'antd';
 import { UserOutlined, LogoutOutlined, PlusOutlined, EditOutlined, DeleteOutlined, LockOutlined, UnlockOutlined, ShareAltOutlined, BookOutlined, TeamOutlined } from '@ant-design/icons';
 import { QRCode } from 'antd';
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const { Header, Content } = Layout;
 const { Meta } = Card;
@@ -1579,9 +1580,27 @@ export default function TeacherDashboard() {
   };
 
   const handleLogout = () => {
-    auth.signOut();
-    navigate('/login');
+    Swal.fire({
+      title: 'Confirm Logout',
+      text: 'Are you sure you want to log out?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, log out!',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        auth.signOut();
+        navigate('/login'); // Redirect to login page after logging out
+        Swal.fire('Logged out!', 'You have been logged out successfully.', 'success');
+      }
+    });
   };
+  // const handleLogout = () => {
+  //   auth.signOut();
+  //   navigate('/login');
+  // };
 
   const handleEditQuiz = (quiz) => {
     setEditingQuiz(quiz);
@@ -1648,7 +1667,7 @@ export default function TeacherDashboard() {
   );
 
   return (
-    <Layout className="min-h-screen">
+    <Layout className="min-h-screen bg-black">
       <Header className="px-4 bg-gradient-to-r text-white bg-indigo-600 hover:bg-indigo-700">
         <Row justify="space-between" align="middle">
           <Col>
@@ -1670,6 +1689,7 @@ export default function TeacherDashboard() {
 
       <Layout>
         <Content className="p-6">
+          
           <Spin spinning={loading}>
             <Tabs defaultActiveKey="1" className="w-full">
               {/* Quizzes Tab */}

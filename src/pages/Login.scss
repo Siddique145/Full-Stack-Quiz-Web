@@ -1,0 +1,104 @@
+// Colors
+$blueSeaweed: rgba(2, 128, 144, 1);
+$blueQueen: rgba(69, 105, 144, 1);
+$blueFire: rgba(44, 101, 174, 1);
+
+// Fonts
+$fontAsap: 'Asap', sans-serif;
+
+body {
+  background-color: $blueFire;
+  font-family: $fontAsap;
+}
+
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, $blueSeaweed, $blueQueen);
+}
+
+.login-container {
+  background-color: white;
+  padding: 40px 30px;
+  border-radius: 10px;
+  position: relative;
+  width: 400px;
+  box-shadow: 5px 10px 15px rgba($blueSeaweed, 0.2);
+  overflow: hidden;
+  animation: slideIn 1s ease-out;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    z-index: -1;
+  }
+
+  &::before {
+    left: 40%;
+    bottom: -130%;
+    background-color: rgba($blueQueen, 0.2);
+    animation: wave 6s infinite linear;
+  }
+
+  &::after {
+    left: 35%;
+    bottom: -125%;
+    background-color: rgba($blueSeaweed, 0.15);
+    animation: wave 7s infinite;
+  }
+}
+
+.input {
+  display: block;
+  width: 100%;
+  padding: 10px 10px;
+  margin: 15px 0;
+  font-family: $fontAsap;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: white;
+  color: #333;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: $blueFire;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-family: $fontAsap;
+  text-transform: uppercase;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 300ms;
+  &:hover {
+    background-color: darken($blueFire, 5%);
+  }
+}
+
+@keyframes wave {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
