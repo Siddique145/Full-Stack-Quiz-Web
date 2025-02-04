@@ -398,7 +398,7 @@ import {
   collection,
   addDoc
 } from "firebase/firestore"
-import { Button, Progress, Radio, Space } from "antd"
+import { Button, Progress, Radio, Space, Spin } from "antd"
 import { ClockCircleOutlined, CheckCircleOutlined,LoadingOutlined } from "@ant-design/icons"
 
 export default function QuizTaking() {
