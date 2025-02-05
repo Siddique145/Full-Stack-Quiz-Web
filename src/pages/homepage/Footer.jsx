@@ -41,18 +41,18 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="" // Replace with your actual WhatsApp community link
+                  href="https://whatsapp.com/channel/0029Vb5GpYP1dAwAAgicUx2u" // Replace with your actual WhatsApp community link
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-2 hover:text-purple-400 transition"
                 >
                   <FaWhatsapp className="text-green-400 text-xl" /> {/* WhatsApp Icon */}
-                  <span>Join Our WhatsApp Community</span>
+                  <span>Follow on WhatsApp Channel for updates </span>
                 </a>
               </li>
               <li>
                 <a
-                  href="https://wa.me/"
+                  href="https://whatsapp.com/channel/0029Vb5GpYP1dAwAAgicUx2u"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-2 hover:text-purple-400 transition"
