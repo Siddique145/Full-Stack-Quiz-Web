@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import emailjs from "emailjs-com";
+import { frameData } from "framer-motion";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ const ContactUs = () => {
       to_name: "Admin",
       from_name: formData.name,
       from_email: formData.email, // ✅ Correct email field
-      message: formData.message,
+      message: (formData.message+ frameData.email),
     };
 
     console.log("Sending email with params:", templateParams); // Debugging log
