@@ -959,14 +959,23 @@ export default function Signup() {
               <label htmlFor="teacher-email" className="sr-only">
                 Teacher Email
               </label>
-              <input
+              {/* <input
                 id="teacher-email"
                 name="teacherEmail"
                 type="email"
                 {...register("teacherEmail")}
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
                 placeholder="Teacher's Email"
+              /> */}
+              <input
+                id="teacher-email"
+                name="teacherEmail"
+                type="email"
+                {...register("teacherEmail")}
+                defaultValue="mdcatpreparationsindh@gmail.com"
+                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
               />
+
               {errors.teacherEmail && (
                 <p className="text-red-600">{errors.teacherEmail.message}</p>
               )}
