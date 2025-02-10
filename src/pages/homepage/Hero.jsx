@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 const Hero = () => {
   return (
     <section className="bg-purple-700 text-white py-20">
@@ -12,12 +13,15 @@ const Hero = () => {
         </p>
         <Link
           to="/login"
-          className="bg-white text-purple-700 py-3 px-8 rounded-full font-bold text-lg hover:bg-purple-100 transition duration-300 shadow-lg"
+          className="relative inline-block bg-white text-purple-700 py-4 px-8 rounded-full font-bold text-lg border-6 border-white transition-all duration-300 
+          hover:bg-purple-600 hover:border-white hover:text-white hover:scale-110 
+          shadow-[0_8px_0px_#4B0082] hover:shadow-[0_12px_0px_#4B0082] animate-bounce"
         >
-          Start with Attempt
+          Click me to Start First Attempt
         </Link>
       </div>
     </section>
   );
 };
+
 export default Hero;

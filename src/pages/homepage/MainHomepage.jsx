@@ -8,13 +8,15 @@ import Footer from "./Footer"
 import AggregateCalculator from "../../components/ui/AggregateCalculator"
 import StatsCard from "../../components/ui/StatsCard"
 import { BookOpen, CheckCircle, Clock, TrendingUp } from "lucide-react"
-
+import PreparationMaterial from "./PreparationMaterials"
+import RegistrationAlert from "./RegisterAlert"
 export default function MainHome() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
         <Hero />
+        <RegistrationAlert/>
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <StatsCard
@@ -39,6 +41,7 @@ export default function MainHome() {
               icon={<BookOpen className="text-purple-600" size={24} />} 
             />
           </div>
+          <PreparationMaterial/>
           <AggregateCalculator/>
         <About />
         {/* <PreparationMaterials /> */}
