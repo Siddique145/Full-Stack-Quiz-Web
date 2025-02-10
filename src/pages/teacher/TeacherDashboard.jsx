@@ -40,7 +40,7 @@ import {
   BookOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
-import { QRCode } from "antd";
+// import { QRCode } from "antd";
 import Swal from "sweetalert2"; // Import SweetAlert2
 
 const { Header, Content } = Layout;
@@ -146,19 +146,19 @@ export default function TeacherDashboard() {
     }
   };
 
-  const generateAccessCode = async (quizId) => {
-    try {
-      const accessCode = Math.random()
-        .toString(36)
-        .substring(2, 8)
-        .toUpperCase();
-      await updateDoc(doc(db, "quizzes", quizId), { accessCode });
-      fetchQuizzes();
-      message.success("Access code generated successfully");
-    } catch (error) {
-      message.error("Failed to generate access code");
-    }
-  };
+  // const generateAccessCode = async (quizId) => {
+  //   try {
+  //     const accessCode = Math.random()
+  //       .toString(36)
+  //       .substring(2, 8)
+  //       .toUpperCase();
+  //     await updateDoc(doc(db, "quizzes", quizId), { accessCode });
+  //     fetchQuizzes();
+  //     message.success("Access code generated successfully");
+  //   } catch (error) {
+  //     message.error("Failed to generate access code");
+  //   }
+  // };
 
   const handleLogout = () => {
     Swal.fire({
@@ -348,12 +348,12 @@ export default function TeacherDashboard() {
                               }
                             />
                           ),
-                          <Button
-                            type="link"
-                            onClick={() => generateAccessCode(quiz.id)}
-                          >
-                            G-c
-                          </Button>,
+                          // <Button
+                          //   type="link"
+                          //   onClick={() => generateAccessCode(quiz.id)}
+                          // >
+                          //   G-c
+                          // </Button>,
                           <EditOutlined
                             key="edit"
                             onClick={() => handleEditQuiz(quiz)}
@@ -382,11 +382,11 @@ export default function TeacherDashboard() {
                                 Time Limit: {quiz.timeLimit || "Not set"}{" "}
                                 minutes
                               </Text>
-                              {quiz.accessCode && (
-                                <Text className="block mt-1 text-green-600">
-                                  Access Code: {quiz.accessCode}
-                                </Text>
-                              )}
+                              {/* {quiz.accessCode && (
+                                // <Text className="block mt-1 text-green-600">
+                                //   Access Code: {quiz.accessCode}
+                                // </Text>
+                              )} */}
                             </>
                           }
                         />

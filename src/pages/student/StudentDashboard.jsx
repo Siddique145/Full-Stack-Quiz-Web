@@ -20,7 +20,7 @@ import {
   Tabs,
   Table,
 } from "antd";
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import Swal from "sweetalert2"; // Import SweetAlert2
 import {
   UserOutlined,
   LogoutOutlined,
@@ -36,17 +36,15 @@ import Hero from "../homepage/Hero";
 import Footer from "../homepage/Footer";
 import TopHeader from "../homepage/TopHeader";
 
-
-
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
-const {  Header, Content } = Layout;
+const { Header, Content } = Layout;
 
 export default function StudentDashboard() {
   const [quizzes, setQuizzes] = useState([]);
   const [quizResults, setQuizResults] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [accessCode, setAccessCode] = useState("");
+  // const [accessCode, setAccessCode] = useState("");
   const [studentName, setStudentName] = useState("");
   const [studentAvatar, setStudentAvatar] = useState("");
   const [studentEmail, setStudentEmail] = useState("");
@@ -130,30 +128,37 @@ export default function StudentDashboard() {
     }
   };
 
-  const handleAccessCodeSubmit = (quizId) => {
-    const quiz = quizzes.find((q) => q.id === quizId);
-    if (quiz.accessCode === accessCode) {
-      navigate(`/take-quiz/${quizId}`);
-    } else {
-      message.error("Invalid access code");
-    }
+  // const handleAccessCodeSubmit = (quizId) => {
+  //   const quiz = quizzes.find((q) => q.id === quizId);
+  //   if (quiz.accessCode === accessCode) {
+  //     navigate(`/take-quiz/${quizId}`);
+  //   } else {
+  //     message.error("Invalid access code");
+  //   }
+  // };
+  const handleQuizStart = (quizId) => {
+    navigate(`/take-quiz/${quizId}`);
   };
 
   const handleLogout = () => {
     Swal.fire({
-      title: 'Confirm Logout',
-      text: 'Are you sure you want to log out?',
-      icon: 'warning',
+      title: "Confirm Logout",
+      text: "Are you sure you want to log out?",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, log out!',
-      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, log out!",
+      cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
         auth.signOut();
-        navigate('/login'); // Redirect to login page after logging out
-        Swal.fire('Logged out!', 'You have been logged out successfully.', 'success');
+        navigate("/login"); // Redirect to login page after logging out
+        Swal.fire(
+          "Logged out!",
+          "You have been logged out successfully.",
+          "success"
+        );
       }
     });
   };
@@ -251,7 +256,7 @@ export default function StudentDashboard() {
       styles: {
         fontSize: 10,
         cellPadding: 4,
-        halign: "center", 
+        halign: "center",
       },
       columnStyles: {
         0: { cellWidth: tableColumnWidths[0] },
@@ -325,10 +330,8 @@ export default function StudentDashboard() {
   ];
 
   return (
-    
     <Spin spinning={loading} tip="Loading...">
       <Layout className="min-h-screen">
-       
         <Header className="px-4 bg-gradient-to-r text-white bg-purple-600 hover:bg-purple-700">
           <Row justify="space-between" align="middle">
             <Col>
@@ -358,7 +361,7 @@ export default function StudentDashboard() {
             </Col>
           </Row>
         </Header>
-        <TopHeader/>
+        <TopHeader />
         <Layout>
           <Content className="p-6 bg-white rounded-lg shadow-md">
             {/* <Spin spinning={loading}> */}
@@ -403,8 +406,8 @@ export default function StudentDashboard() {
                         }
                       >
                         <p>{quiz.description}</p>
-                        <div className="mt-3">
-                          {/* Conditionally render based on if the quiz has been attempted */}
+                        {/* <div className="mt-3">
+                          Conditionally render based on if the quiz has been attempted
                           {isQuizAttempted(quiz.id) ? (
                             <span className="text-white bg-green-700 p-2 w-full text-sm font-semibold">
                               Completed
@@ -429,6 +432,25 @@ export default function StudentDashboard() {
                               </Button>
                             </>
                           )}
+                        </div> */}
+
+                        <div className="mt-3">
+                          {/* Conditionally render based on if the quiz has been attempted */}
+                          {isQuizAttempted(quiz.id) ? (
+                            <span className="text-white bg-green-700 p-2 w-full text-sm font-semibold">
+                              Completed
+                            </span>
+                          ) : (
+                            <Button
+                              type="primary"
+                              onClick={() => handleQuizStart(quiz.id)} // Updated function
+                              disabled={isQuizAttempted(quiz.id)}
+                              className="mt-2 w-full bg-purple-600"
+                              block
+                            >
+                              Start Quiz
+                            </Button>
+                          )}
                         </div>
                       </Card>
                     </List.Item>
@@ -448,7 +470,7 @@ export default function StudentDashboard() {
             </Tabs>
             {/* </Spin> */}
           </Content>
-            <Footer/>
+          <Footer />
         </Layout>
 
         <Modal
